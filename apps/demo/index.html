@@ -35,6 +35,34 @@
         max-width: 760px;
       }
 
+      .topbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 16px;
+      }
+
+      .lang-switch {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 14px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.86);
+        box-shadow: 0 12px 28px rgba(15, 23, 42, 0.08);
+      }
+
+      .lang-switch span {
+        color: #475569;
+        font-size: 13px;
+        font-weight: 600;
+      }
+
+      .lang-switch button {
+        border-radius: 999px;
+        padding: 10px 16px;
+      }
+
       h1 {
         margin: 0;
         font-size: clamp(2.3rem, 4vw, 4.6rem);
@@ -105,14 +133,20 @@
   </head>
   <body>
     <main>
-      <header>
-        <p>Standalone open-source preview library</p>
-        <h1>Remote file preview with Web Components.</h1>
-        <p>
+      <div class="topbar">
+        <header>
+          <p data-copy="strap">Standalone open-source preview library</p>
+          <h1 data-copy="title">Remote file preview with Web Components.</h1>
+          <p data-copy="intro">
           This demo renders files directly from remote URLs with a plugin-driven client-side architecture.
           PDF, text, code, image, audio, video, and early Office Open XML hooks are included in the v0.1 foundation.
-        </p>
-      </header>
+          </p>
+        </header>
+        <div class="lang-switch">
+          <span data-copy="switch-label">Language:</span>
+          <button id="lang-button" type="button">中文</button>
+        </div>
+      </div>
       <section class="controls">
         <input id="src-input" type="url" placeholder="https://example.com/readme.md" />
         <select id="sample-select"></select>
@@ -123,4 +157,3 @@
     </main>
   </body>
   </html>
-
