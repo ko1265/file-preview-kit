@@ -1,0 +1,37 @@
+{
+  "name": "@file-preview-kit/core",
+  "version": "0.1.0",
+  "description": "Core preview registry and built-in plugins for file-preview-kit.",
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": false,
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": ["dist"],
+  "dependencies": {
+    "@file-preview-kit/shared": "workspace:*",
+    "dompurify": "^3.4.2",
+    "highlight.js": "^11.11.1",
+    "jszip": "^3.10.1",
+    "mammoth": "^1.12.0",
+    "marked": "^18.0.3",
+    "pdfjs-dist": "^5.7.284",
+    "xlsx": "^0.18.5"
+  },
+  "keywords": ["file-preview", "preview", "web-components", "frontend"],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsc -b",
+    "clean": "Remove-Item -Recurse -Force dist -ErrorAction SilentlyContinue; Remove-Item -Force tsconfig.tsbuildinfo -ErrorAction SilentlyContinue",
+    "lint": "tsc --noEmit"
+  }
+}

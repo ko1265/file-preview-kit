@@ -1,0 +1,9 @@
+node_modules
+dist
+coverage
+.turbo
+.vite
+*.tsbuildinfo
+pnpm-lock.yaml
+.DS_Store
+*.tgz

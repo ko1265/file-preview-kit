@@ -1,0 +1,19 @@
+{
+  "name": "@file-preview-kit/demo",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "vite build",
+    "clean": "Remove-Item -Recurse -Force dist -ErrorAction SilentlyContinue",
+    "dev": "vite",
+    "lint": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@file-preview-kit/web-components": "workspace:*"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.2",
+    "vite": "^6.0.5"
+  }
+}
