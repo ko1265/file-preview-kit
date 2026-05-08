@@ -4,6 +4,14 @@
   "private": true,
   "description": "Pure frontend TypeScript monorepo for remote URL file preview via Web Components.",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ko1265/file-preview-kit.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ko1265/file-preview-kit/issues"
+  },
+  "homepage": "https://github.com/ko1265/file-preview-kit#readme",
   "packageManager": "pnpm@9.12.3",
   "scripts": {
     "build": "pnpm -r build",

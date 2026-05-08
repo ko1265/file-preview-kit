@@ -10,6 +10,8 @@ export function mergeRequestConfigs(
   const mergedHeaders: Record<string, string> = {};
   let hasHeaders = false;
   let merged: FilePreviewRequestConfig | undefined;
+  let mergedOffice: FilePreviewRequestConfig["office"] | undefined;
+  let hasOffice = false;
 
   for (const config of configs) {
     if (!config) {
@@ -25,18 +27,29 @@ export function mergeRequestConfigs(
       hasHeaders = true;
       Object.assign(mergedHeaders, config.headers);
     }
+
+    if (config.office) {
+      hasOffice = true;
+      mergedOffice = {
+        ...(mergedOffice ?? {}),
+        ...config.office,
+        workbook: {
+          ...(mergedOffice?.workbook ?? {}),
+          ...(config.office.workbook ?? {})
+        }
+      };
+    }
   }
 
   if (!merged) {
     return undefined;
   }
 
-  return hasHeaders
-    ? {
-        ...merged,
-        headers: mergedHeaders
-      }
-    : merged;
+  return {
+    ...merged,
+    ...(hasHeaders ? { headers: mergedHeaders } : {}),
+    ...(hasOffice && mergedOffice ? { office: mergedOffice } : {})
+  };
 }
 
 export function createRequestInit(

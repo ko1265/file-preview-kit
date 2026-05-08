@@ -75,6 +75,17 @@ export interface FilePreviewRequestConfig {
   integrity?: string;
   authToken?: string;
   authScheme?: string;
+  office?: FilePreviewOfficeRequestConfig;
+}
+
+export interface FilePreviewOfficeRequestConfig {
+  workbook?: FilePreviewWorkbookPreviewOptions;
+}
+
+export interface FilePreviewWorkbookPreviewOptions {
+  maxSheets?: number;
+  maxRows?: number;
+  maxColumns?: number;
 }
 
 export interface FilePreviewFetchContext {
@@ -82,6 +93,14 @@ export interface FilePreviewFetchContext {
   request?: FilePreviewRequestConfig;
   signal?: AbortSignal;
 }
+
+export type FilePreviewRequestResolver = (
+  source: ResolvedFileSource,
+  request: FilePreviewRequestConfig | undefined
+) =>
+  | FilePreviewRequestConfig
+  | undefined
+  | Promise<FilePreviewRequestConfig | undefined>;
 
 export type FilePreviewFetcher = (
   input: string,

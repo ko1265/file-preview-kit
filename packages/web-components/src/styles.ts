@@ -111,6 +111,38 @@ export const previewStyles = `
     margin: 0 0 14px;
   }
 
+  .fpk-docx-preview :is(ul, ol) {
+    margin: 0 0 16px;
+    padding-left: 22px;
+  }
+
+  .fpk-docx-preview blockquote {
+    margin: 0 0 16px;
+    padding: 8px 0 8px 16px;
+    border-left: 3px solid rgba(15, 23, 42, 0.16);
+    color: #475569;
+  }
+
+  .fpk-docx-preview table {
+    width: 100%;
+    margin: 0 0 16px;
+    border-collapse: collapse;
+    table-layout: fixed;
+  }
+
+  .fpk-docx-preview td,
+  .fpk-docx-preview th {
+    padding: 10px 12px;
+    border: 1px solid rgba(15, 23, 42, 0.1);
+    text-align: left;
+    vertical-align: top;
+  }
+
+  .fpk-docx-preview img {
+    max-width: 100%;
+    height: auto;
+  }
+
   .fpk-markdown-preview pre,
   .fpk-docx-preview pre {
     overflow: auto;
@@ -130,6 +162,33 @@ export const previewStyles = `
     padding: 18px;
   }
 
+  .fpk-office-note {
+    display: grid;
+    gap: 6px;
+    padding: 12px 14px;
+    border-radius: 14px;
+    color: #854d0e;
+    background: #fffbeb;
+    border: 1px solid #fcd34d;
+  }
+
+  .fpk-office-note strong {
+    font-size: 13px;
+  }
+
+  .fpk-office-note p,
+  .fpk-office-meta {
+    margin: 0;
+    line-height: 1.55;
+  }
+
+  .fpk-office-meta {
+    color: #64748b;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+  }
+
   .fpk-section-title {
     margin: 0;
     font-size: 14px;
@@ -143,6 +202,8 @@ export const previewStyles = `
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
+    overflow-x: auto;
+    padding-bottom: 2px;
   }
 
   .fpk-sheet-tab {
@@ -153,6 +214,20 @@ export const previewStyles = `
     color: #0f172a;
     background: #e2e8f0;
     cursor: pointer;
+    white-space: nowrap;
+    transition:
+      background-color 120ms ease,
+      color 120ms ease,
+      transform 120ms ease;
+  }
+
+  .fpk-sheet-tab:hover {
+    transform: translateY(-1px);
+  }
+
+  .fpk-sheet-tab:focus-visible {
+    outline: 2px solid #0f172a;
+    outline-offset: 2px;
   }
 
   .fpk-sheet-tab[data-active="true"] {
@@ -161,15 +236,36 @@ export const previewStyles = `
   }
 
   .fpk-sheet-content {
-    overflow: auto;
     border-radius: 14px;
     border: 1px solid rgba(15, 23, 42, 0.08);
     background: white;
   }
 
+  .fpk-sheet-panel {
+    display: grid;
+    gap: 12px;
+    padding: 14px;
+  }
+
+  .fpk-sheet-panel > .fpk-office-meta:first-child {
+    color: #334155;
+    font-size: 13px;
+  }
+
+  .fpk-sheet-panel > .fpk-office-meta:nth-child(2) {
+    color: #64748b;
+  }
+
+  .fpk-sheet-scroll {
+    overflow: auto;
+    border-radius: 12px;
+    border: 1px solid rgba(15, 23, 42, 0.08);
+  }
+
   .fpk-sheet-content table {
     width: 100%;
     border-collapse: collapse;
+    table-layout: fixed;
   }
 
   .fpk-sheet-content td,
@@ -178,6 +274,41 @@ export const previewStyles = `
     border: 1px solid rgba(15, 23, 42, 0.08);
     text-align: left;
     font-size: 13px;
+    min-width: 120px;
+    vertical-align: top;
+    word-break: break-word;
+  }
+
+  .fpk-sheet-content td[data-formula] {
+    position: relative;
+    background:
+      linear-gradient(135deg, rgba(59, 130, 246, 0.08), transparent 18px),
+      white;
+  }
+
+  .fpk-sheet-content td[data-formula]::after {
+    content: "fx";
+    position: absolute;
+    top: 6px;
+    right: 8px;
+    color: #2563eb;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .fpk-sheet-content thead th {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background: #f8fafc;
+  }
+
+  .fpk-sheet-content tbody th {
+    background: #f8fafc;
+    color: #475569;
+    font-weight: 600;
   }
 
   .fpk-slide {
@@ -272,6 +403,26 @@ export const previewStyles = `
     text-align: center;
     color: #334155;
     font-size: 13px;
+    font-weight: 600;
+  }
+
+  .fpk-pdf-status {
+    color: #64748b;
+    font-size: 12px;
+    font-weight: 600;
+    min-width: 64px;
+    text-align: right;
+  }
+
+  .fpk-pdf-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    padding: 10px 16px;
+    color: #0f172a;
+    text-decoration: none;
+    background: #e2e8f0;
     font-weight: 600;
   }
 

@@ -1,5 +1,9 @@
 import { FilePreviewService } from "@file-preview-kit/core";
-import type { FilePreviewRequestConfig, FileSource } from "@file-preview-kit/shared";
+import type {
+  FilePreviewOfficeRequestConfig,
+  FilePreviewRequestConfig,
+  FileSource
+} from "@file-preview-kit/shared";
 import { previewStyles } from "./styles";
 
 export interface FilePreviewElementAttributes {
@@ -10,6 +14,9 @@ export interface FilePreviewElementAttributes {
   credentials?: RequestCredentials;
   authToken?: string;
   authScheme?: string;
+  workbookMaxSheets?: string;
+  workbookMaxRows?: string;
+  workbookMaxColumns?: string;
 }
 
 export class FilePreviewElement extends HTMLElement {
@@ -21,7 +28,10 @@ export class FilePreviewElement extends HTMLElement {
     "headers",
     "credentials",
     "auth-token",
-    "auth-scheme"
+    "auth-scheme",
+    "workbook-max-sheets",
+    "workbook-max-rows",
+    "workbook-max-columns"
   ];
 
   private readonly root: ShadowRoot;
@@ -108,14 +118,16 @@ export class FilePreviewElement extends HTMLElement {
     const credentials = this.getAttribute("credentials") as RequestCredentials | null;
     const authToken = this.getAttribute("auth-token");
     const authScheme = this.getAttribute("auth-scheme");
+    const office = this.parseWorkbookAttributes();
 
     const attributeConfig: FilePreviewRequestConfig | undefined =
-      attributeHeaders || credentials || authToken || authScheme
+      attributeHeaders || credentials || authToken || authScheme || office
         ? {
             ...(attributeHeaders ? { headers: attributeHeaders } : {}),
             ...(credentials ? { credentials } : {}),
             ...(authToken ? { authToken } : {}),
-            ...(authScheme ? { authScheme } : {})
+            ...(authScheme ? { authScheme } : {}),
+            ...(office ? { office } : {})
           }
         : undefined;
 
@@ -123,9 +135,23 @@ export class FilePreviewElement extends HTMLElement {
       return undefined;
     }
 
+    const mergedOffice = {
+      ...(attributeConfig?.office ?? {}),
+      ...(this.explicitRequestConfig?.office ?? {}),
+      ...(attributeConfig?.office?.workbook || this.explicitRequestConfig?.office?.workbook
+        ? {
+            workbook: {
+              ...(attributeConfig?.office?.workbook ?? {}),
+              ...(this.explicitRequestConfig?.office?.workbook ?? {})
+            }
+          }
+        : {})
+    };
+
     return {
       ...(attributeConfig ?? {}),
       ...(this.explicitRequestConfig ?? {}),
+      ...(Object.keys(mergedOffice).length > 0 ? { office: mergedOffice } : {}),
       headers: {
         ...(attributeConfig?.headers ?? {}),
         ...(this.explicitRequestConfig?.headers ?? {})
@@ -141,6 +167,38 @@ export class FilePreviewElement extends HTMLElement {
 
     const parsed = JSON.parse(raw) as Record<string, string>;
     return parsed;
+  }
+
+  private parseWorkbookAttributes(): FilePreviewOfficeRequestConfig | undefined {
+    const maxSheets = this.parsePositiveIntegerAttribute("workbook-max-sheets");
+    const maxRows = this.parsePositiveIntegerAttribute("workbook-max-rows");
+    const maxColumns = this.parsePositiveIntegerAttribute("workbook-max-columns");
+
+    const workbook: FilePreviewOfficeRequestConfig["workbook"] = {};
+
+    if (maxSheets !== undefined) {
+      workbook.maxSheets = maxSheets;
+    }
+
+    if (maxRows !== undefined) {
+      workbook.maxRows = maxRows;
+    }
+
+    if (maxColumns !== undefined) {
+      workbook.maxColumns = maxColumns;
+    }
+
+    return Object.keys(workbook).length > 0 ? { workbook } : undefined;
+  }
+
+  private parsePositiveIntegerAttribute(name: string): number | undefined {
+    const raw = this.getAttribute(name);
+    if (!raw) {
+      return undefined;
+    }
+
+    const value = Number.parseInt(raw, 10);
+    return Number.isInteger(value) && value > 0 ? value : undefined;
   }
 
   private renderShell(): void {

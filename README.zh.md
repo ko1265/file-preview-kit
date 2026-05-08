@@ -1,51 +1,66 @@
 # file-preview-kit
 
-[English](README.md) | [中文](#中文)
+[English](README.md) | [中文](#file-preview-kit)
 
-`file-preview-kit` 是一个纯前端的 TypeScript 单仓库项目，目标是通过 Web Components 预览远程 URL 文件。这个项目从一开始就围绕浏览器端运行、清晰的包边界和插件化架构来设计，先打好 v0.1 基础，再逐步走向更完整的 v1。
+`file-preview-kit` 是一个纯前端 TypeScript 单仓库，用于通过 Web Components 预览远程 URL 文件。项目坚持浏览器端运行、清晰的包边界和插件式架构，目前正在围绕实用的 `v0.2` 做发布前加固。
 
-## 范围
+## 能力范围
 
 - 只做远程 URL 预览
 - 以 Web Components 为主
 - 纯浏览器运行，不做服务端转换
 - 不支持编辑
-- 不支持旧格式 `doc` / `xls` / `ppt`
-- 当前支持：PDF、文本、Markdown、JSON、XML、YAML、CSV、代码、图片、音频、视频
-- 基础支持 Open XML：`docx`、`xlsx`、`pptx`
+- 不支持旧版 `doc` / `xls` / `ppt`
+- 内置支持 PDF、文本、Markdown、JSON、XML、YAML、CSV、代码、图片、音频、视频、`docx`、`xlsx`、`pptx`
 
-## 仓库结构
+## 包结构
 
-- `packages/shared`：共享的文件预览契约和类型
-- `packages/core`：归一化、注册表、服务层和内置插件
-- `packages/web-components`：`file-preview` 自定义元素
-- `apps/demo`：基于 Vite 的演示应用
-- `tests`：核心行为的 Vitest 测试
+- `@file-preview-kit/shared`：共享类型与预览契约
+- `@file-preview-kit/core`：URL 归一化、插件注册表、服务层与内置预览器
+- `@file-preview-kit/web-components`：`file-preview` 自定义元素
 
-## 已实现的预览能力
+## 安装
 
-- PDF：使用 `pdf.js` 进行画布渲染，并支持翻页
-- Markdown：渲染为 HTML，并做基础清洗
+使用自定义元素：
+
+```bash
+pnpm add @file-preview-kit/web-components
+```
+
+直接使用服务层和插件注册表：
+
+```bash
+pnpm add @file-preview-kit/core
+```
+
+## 预览器
+
+- PDF：基于 `pdf.js` 的 canvas 渲染，支持翻页、缩放和新标签打开原文件
+- Markdown：渲染为已清洗的 HTML
 - 结构化文本：纯文本、JSON、XML、YAML、CSV
-- 代码：带基础语法高亮的源码预览
+- 代码：基础语法高亮
 - 媒体：图片、音频、视频
 - Office Open XML：
-  - `docx`：通过 Mammoth 提取 HTML/正文
-  - `xlsx`：通过 SheetJS 渲染工作表
+  - `docx`：通过 Mammoth 提取并清洗 HTML / 正文，同时显示转换警告
+  - `xlsx`：通过 SheetJS 渲染结构化工作表表格，并为稳定性限制工作表、行数和列数
   - `pptx`：通过 JSZip 提取幻灯片文本
-- 回退态：对不支持的文件显示友好提示
+- 回退态：对暂不支持的文件显示友好提示
 
-## 核心设计
+## 快速开始
 
-1. `@file-preview-kit/shared` 定义文件源和插件契约。
-2. `@file-preview-kit/core` 负责远程 URL 归一化、最佳插件选择和预览节点渲染。
-3. `@file-preview-kit/web-components` 将核心服务包装成独立的 `file-preview` 自定义元素。
+```ts
+import { registerFilePreviewElement } from "@file-preview-kit/web-components";
 
-大体积格式处理器采用按需加载，这样使用方只会下载自己真正需要的格式代码。
+registerFilePreviewElement();
 
-## 远程请求配置
+const preview = document.createElement("file-preview");
+preview.setAttribute("src", "https://example.com/readme.md");
+document.body.append(preview);
+```
 
-预览请求既可以在服务层统一配置，也可以在元素层单独配置。
+## 请求配置
+
+预览请求既可以在服务层统一配置，也可以在元素实例上单独配置。
 
 ```ts
 import { FilePreviewService } from "@file-preview-kit/core";
@@ -60,12 +75,37 @@ const service = new FilePreviewService({
 });
 ```
 
+如果需要做动态鉴权或按文件定制请求，可以提供 `resolveRequest`：
+
+```ts
+const service = new FilePreviewService({
+  async resolveRequest(source, request) {
+    return {
+      ...(request ?? {}),
+      authScheme: "Bearer",
+      headers: {
+        ...(request?.headers ?? {}),
+        Authorization: `Bearer token-for-${source.normalizedName}`
+      }
+    };
+  }
+});
+```
+
 ```ts
 const preview = document.createElement("file-preview") as HTMLElement & {
   requestConfig?: {
     credentials?: RequestCredentials;
     headers?: Record<string, string>;
     authToken?: string;
+    authScheme?: string;
+    office?: {
+      workbook?: {
+        maxSheets?: number;
+        maxRows?: number;
+        maxColumns?: number;
+      };
+    };
   };
 };
 
@@ -74,43 +114,57 @@ preview.requestConfig = {
   headers: {
     "X-Document-Scope": "private"
   },
-  authToken: "token-value"
+  authToken: "token-value",
+  authScheme: "Bearer",
+  office: {
+    workbook: {
+      maxSheets: 4,
+      maxRows: 60,
+      maxColumns: 10
+    }
+  }
 };
 ```
 
-## 开始使用
+## API 边界
+
+- `requestConfig` 只作用于基于 `fetch` 的预览器，例如文本、Markdown、代码、JSON/XML/YAML/CSV、PDF、`docx`、`xlsx`、`pptx`
+- 原生媒体预览器（`img`、`audio`、`video`）直接使用文件 URL，不会附带自定义请求头或鉴权 token
+- 元素属性和 `requestConfig` 属性会合并；如果两边都提供，属性值 `requestConfig` 优先
+- `resolveRequest` 会在默认请求与单文件请求合并后运行，适合做 token 刷新或按 URL 动态调整鉴权
+- `authToken` 只会为基于 `fetch` 的预览自动注入 `Authorization`；如果你在 `headers` 里显式写了 `Authorization`，显式值优先
+
+## Office 预览边界
+
+- `docx`、`xlsx`、`pptx` 都是“可读预览”，不是版式高保真还原
+- `xlsx` 预览为了稳定性会限制可见工作表标签、行数和列数，这些限制可通过 `requestConfig.office.workbook` 调整
+- `docx` 输出在插入前会经过清洗，危险 HTML 会被移除
+- `pptx` 当前重点是抽取幻灯片文本，不追求布局或嵌入媒体还原
+
+## 本地开发
 
 ```bash
 pnpm install
 pnpm build
 pnpm dev
 pnpm test
+pnpm pack:check
 ```
 
-## 示例
+## 发布说明
 
-```ts
-import { registerFilePreviewElement } from "@file-preview-kit/web-components";
-
-registerFilePreviewElement();
-
-const preview = document.createElement("file-preview");
-preview.setAttribute("src", "https://example.com/readme.md");
-document.body.append(preview);
-```
+- 可发布包为 `@file-preview-kit/shared`、`@file-preview-kit/core`、`@file-preview-kit/web-components`
+- 包元数据已包含 repository、bugs、homepage 链接
+- 通过 `pnpm pack:check` 验证 tarball 生成
 
 ## 文档
 
-- 英文版：`README.md`
-- 中文版：此文件
+- 英文： [README.md](README.md)
+- 中文：当前文件
 
-## CORS 说明
+## 说明
 
-这个库会在浏览器里直接抓取远程内容，因此能否预览成功取决于目标 URL 是否允许跨域访问。媒体文件有时还能靠浏览器原生标签显示，但文本、二进制和 Office 预览通常更依赖 fetch 成功。
-
-## 当前限制
-
-- `docx`、`xlsx`、`pptx` 目前更偏“可读预览”，不是高保真版式还原
-- 不支持编辑、批注或服务端转换
-- `pdf.js` 会带来较大的可选 worker 资源
-
+- 远程预览仍然依赖浏览器的 CORS 行为
+- 浏览器凭据和请求头不能绕过目标 URL 自身不允许的跨域限制
+- PDF 支持会引入较大的可选 `pdf.js` worker 资源
+- Office 预览优先保证可读性，而不是追求版式还原

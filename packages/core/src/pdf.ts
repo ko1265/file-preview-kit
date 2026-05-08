@@ -64,6 +64,16 @@ function createButton(label: string): HTMLButtonElement {
   return button;
 }
 
+function createLink(label: string, href: string): HTMLAnchorElement {
+  const link = document.createElement("a");
+  link.className = "fpk-pdf-link";
+  link.href = href;
+  link.target = "_blank";
+  link.rel = "noreferrer";
+  link.textContent = label;
+  return link;
+}
+
 function createPdfIframeFallback(
   context: FilePreviewRenderContext,
   reason?: string
@@ -99,12 +109,27 @@ async function renderPdfDocument(context: FilePreviewRenderContext): Promise<HTM
     const viewport = createContainer("fpk-pdf-canvas-wrap");
     const pageCounter = document.createElement("span");
     pageCounter.className = "fpk-pdf-page-counter";
+    const status = document.createElement("span");
+    status.className = "fpk-pdf-status";
     const previousButton = createButton("Previous");
     const nextButton = createButton("Next");
+    const zoomOutButton = createButton("-");
+    const zoomResetButton = createButton("100%");
+    const zoomInButton = createButton("+");
+    const openButton = createLink("Open", context.source.url);
     const canvas = document.createElement("canvas");
     canvas.className = "fpk-pdf-canvas";
     viewport.append(canvas);
-    toolbar.append(previousButton, pageCounter, nextButton);
+    toolbar.append(
+      previousButton,
+      pageCounter,
+      nextButton,
+      zoomOutButton,
+      zoomResetButton,
+      zoomInButton,
+      openButton,
+      status
+    );
     wrapper.append(toolbar, viewport);
 
     const context2d = canvas.getContext("2d");
@@ -119,19 +144,38 @@ async function renderPdfDocument(context: FilePreviewRenderContext): Promise<HTM
     const renderingContext = context2d;
 
     let currentPage = 1;
+    let scale = 1;
+    let renderVersion = 0;
 
     async function paintPage(pageNumber: number): Promise<void> {
+      const version = ++renderVersion;
+      status.textContent = "Rendering...";
+      previousButton.disabled = true;
+      nextButton.disabled = true;
+      zoomOutButton.disabled = true;
+      zoomResetButton.disabled = true;
+      zoomInButton.disabled = true;
+
       const page = await documentProxy.getPage(pageNumber);
-      const viewport = page.getViewport({ scale: 1.25 });
+      const viewport = page.getViewport({ scale });
       canvas.width = viewport.width;
       canvas.height = viewport.height;
       pageCounter.textContent = `Page ${pageNumber} / ${documentProxy.numPages}`;
-      previousButton.disabled = pageNumber <= 1;
-      nextButton.disabled = pageNumber >= documentProxy.numPages;
       await page.render({
         canvasContext: renderingContext,
         viewport
       }).promise;
+      if (version !== renderVersion) {
+        return;
+      }
+
+      previousButton.disabled = pageNumber <= 1;
+      nextButton.disabled = pageNumber >= documentProxy.numPages;
+      zoomOutButton.disabled = scale <= 0.5;
+      zoomResetButton.disabled = scale === 1;
+      zoomInButton.disabled = scale >= 2.5;
+      status.textContent = `${Math.round(scale * 100)}%`;
+      zoomResetButton.textContent = `${Math.round(scale * 100)}%`;
     }
 
     previousButton.addEventListener("click", () => {
@@ -149,6 +193,33 @@ async function renderPdfDocument(context: FilePreviewRenderContext): Promise<HTM
       }
 
       currentPage += 1;
+      void paintPage(currentPage);
+    });
+
+    zoomOutButton.addEventListener("click", () => {
+      if (scale <= 0.5) {
+        return;
+      }
+
+      scale = Math.max(0.5, Number((scale - 0.25).toFixed(2)));
+      void paintPage(currentPage);
+    });
+
+    zoomResetButton.addEventListener("click", () => {
+      if (scale === 1) {
+        return;
+      }
+
+      scale = 1;
+      void paintPage(currentPage);
+    });
+
+    zoomInButton.addEventListener("click", () => {
+      if (scale >= 2.5) {
+        return;
+      }
+
+      scale = Math.min(2.5, Number((scale + 0.25).toFixed(2)));
       void paintPage(currentPage);
     });
 

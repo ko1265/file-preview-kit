@@ -2,6 +2,7 @@ import type {
   FilePreviewFetcher,
   FilePreviewPlugin,
   FilePreviewRequestConfig,
+  FilePreviewRequestResolver,
   FilePreviewResolution,
   FileSource
 } from "@file-preview-kit/shared";
@@ -13,17 +14,20 @@ export interface FilePreviewServiceOptions {
   plugins?: FilePreviewPlugin[];
   defaultRequest?: FilePreviewRequestConfig;
   fetcher?: FilePreviewFetcher;
+  resolveRequest?: FilePreviewRequestResolver;
 }
 
 export class FilePreviewService {
   readonly registry: FilePreviewRegistry;
   readonly defaultRequest: FilePreviewRequestConfig | undefined;
   readonly fetcher: FilePreviewFetcher;
+  readonly resolveRequest: FilePreviewRequestResolver | undefined;
 
   constructor(options: FilePreviewServiceOptions = {}) {
     this.registry = new FilePreviewRegistry();
     this.defaultRequest = options.defaultRequest;
     this.fetcher = options.fetcher ?? defaultPreviewFetcher;
+    this.resolveRequest = options.resolveRequest;
     for (const plugin of options.plugins ?? createDefaultPlugins()) {
       this.registry.register(plugin);
     }
@@ -44,7 +48,10 @@ export class FilePreviewService {
 
   async render(source: FileSource, signal?: AbortSignal): Promise<HTMLElement> {
     const resolution = this.resolve(source);
-    const request = mergeRequestConfigs(this.defaultRequest, resolution.source.request);
+    const mergedRequest = mergeRequestConfigs(this.defaultRequest, resolution.source.request);
+    const request = this.resolveRequest
+      ? await this.resolveRequest(resolution.source, mergedRequest)
+      : mergedRequest;
     return resolution.plugin.render(
       {
         source: resolution.source,
