@@ -1,0 +1,74 @@
+<svg width="1600" height="900" viewBox="0 0 1600 900" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">file-preview-kit v1.0-prep launch card</title>
+  <desc id="desc">A screenshot-style release card showing public URL, auth-shaped request handling, Office extracts, and media previews.</desc>
+  <defs>
+    <linearGradient id="bg" x1="160" y1="0" x2="1440" y2="900" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#F8FAFC"/>
+      <stop offset="1" stop-color="#E0F2FE"/>
+    </linearGradient>
+    <radialGradient id="glow1" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(280 180) rotate(48) scale(280 320)">
+      <stop stop-color="#F472B6" stop-opacity="0.28"/>
+      <stop offset="1" stop-color="#F472B6" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="glow2" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(1230 160) rotate(108) scale(300 330)">
+      <stop stop-color="#22C55E" stop-opacity="0.22"/>
+      <stop offset="1" stop-color="#22C55E" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="shadow" x="-40" y="-40" width="1680" height="980" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feDropShadow dx="0" dy="24" stdDeviation="30" flood-color="#0F172A" flood-opacity="0.12"/>
+    </filter>
+    <style>
+      .title { font: 700 74px 'Space Grotesk', 'Segoe UI', sans-serif; fill: #0F172A; letter-spacing: -0.05em; }
+      .subtitle { font: 500 28px 'Segoe UI', sans-serif; fill: #334155; }
+      .label { font: 700 20px 'Segoe UI', sans-serif; fill: #475569; letter-spacing: 0.08em; text-transform: uppercase; }
+      .cardTitle { font: 700 28px 'Space Grotesk', 'Segoe UI', sans-serif; fill: #0F172A; }
+      .cardBody { font: 500 20px 'Segoe UI', sans-serif; fill: #334155; }
+      .small { font: 500 18px 'Segoe UI', sans-serif; fill: #64748B; }
+      .pill { font: 700 18px 'Segoe UI', sans-serif; fill: #0F172A; }
+      .mono { font: 600 18px 'IBM Plex Mono', 'Consolas', monospace; fill: #0F172A; }
+    </style>
+  </defs>
+  <rect width="1600" height="900" fill="url(#bg)"/>
+  <rect width="1600" height="900" fill="url(#glow1)"/>
+  <rect width="1600" height="900" fill="url(#glow2)"/>
+
+  <g filter="url(#shadow)">
+    <rect x="110" y="90" width="1380" height="720" rx="36" fill="white" fill-opacity="0.92"/>
+  </g>
+
+  <g>
+    <text x="170" y="175" class="label">Public launch asset</text>
+    <text x="170" y="260" class="title">file-preview-kit</text>
+    <text x="170" y="320" class="subtitle">Remote file preview with Web Components, tuned for release-ready messaging.</text>
+  </g>
+
+  <g>
+    <rect x="170" y="380" width="510" height="300" rx="28" fill="#F8FAFC" stroke="#E2E8F0"/>
+    <text x="210" y="435" class="cardTitle">What it shows</text>
+    <text x="210" y="485" class="cardBody">Public URL preview from a remote README</text>
+    <text x="210" y="535" class="cardBody">Auth-shaped request handling</text>
+    <text x="210" y="585" class="cardBody">Office extracts for docx, xlsx, pptx</text>
+    <text x="210" y="635" class="cardBody">Native image, audio, and video previews</text>
+  </g>
+
+  <g>
+    <rect x="735" y="380" width="620" height="300" rx="28" fill="#FFFFFF" stroke="#E2E8F0"/>
+    <text x="775" y="435" class="cardTitle">Release framing</text>
+    <rect x="775" y="470" width="170" height="44" rx="999" fill="#DBEAFE"/>
+    <text x="802" y="499" class="pill">Browser-only</text>
+    <rect x="965" y="470" width="220" height="44" rx="999" fill="#DCFCE7"/>
+    <text x="994" y="499" class="pill">Readable extracts</text>
+    <rect x="1205" y="470" width="110" height="44" rx="999" fill="#FCE7F3"/>
+    <text x="1236" y="499" class="pill">No edit</text>
+
+    <text x="775" y="565" class="cardBody">The launch note stays short and explicit about scope.</text>
+    <text x="775" y="615" class="cardBody">Office files are previewed conservatively, not rendered faithfully.</text>
+    <text x="775" y="665" class="cardBody">Public and auth samples are examples, not endpoint guarantees.</text>
+  </g>
+
+  <g>
+    <rect x="170" y="730" width="1185" height="48" rx="999" fill="#0F172A"/>
+    <text x="205" y="762" class="mono" fill="#FFFFFF">A compact browser-only preview demo covering public URL, auth-shaped request handling, Office extracts, and media previews.</text>
+  </g>
+</svg>
+

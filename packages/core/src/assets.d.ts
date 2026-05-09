@@ -31,3 +31,14 @@ declare module "pdfjs-dist/legacy/build/pdf.mjs" {
     destroy?(): Promise<void> | void;
   };
 }
+
+declare module "mammoth/mammoth.browser.js" {
+  const mammoth: {
+    convertToHtml(input: { arrayBuffer: ArrayBuffer }): Promise<{
+      value: string;
+      messages: Array<{ message: string; type: string }>;
+    }>;
+  };
+
+  export default mammoth;
+}

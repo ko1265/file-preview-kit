@@ -40,7 +40,7 @@ type SheetPreviewData = {
 };
 
 type MammothConverter = {
-  convertToHtml(input: { buffer: ArrayBuffer }): Promise<{
+  convertToHtml(input: { buffer?: ArrayBuffer | Buffer; arrayBuffer?: ArrayBuffer }): Promise<{
     value: string;
     messages: MammothMessage[];
   }>;
@@ -67,7 +67,7 @@ function createOfficeMeta(text: string): HTMLElement {
 }
 
 function normalizePositiveInteger(value: number | undefined, fallback: number): number {
-  return Number.isInteger(value) && value !== undefined && value > 0 ? value : fallback;
+  return value !== undefined && Number.isInteger(value) && value > 0 ? value : fallback;
 }
 
 function formatCellLabel(rowIndex: number, columnIndex: number): string {
@@ -154,20 +154,48 @@ async function sanitizeOfficeHtml(html: string): Promise<string> {
   return template.innerHTML.trim();
 }
 
+function resolveMammothModule(module: unknown): MammothConverter {
+  const resolved = module as { default?: MammothConverter };
+  return (resolved.default ?? module) as MammothConverter;
+}
+
+async function convertDocxToHtml(
+  mammothModule: MammothConverter,
+  buffer: ArrayBuffer
+): Promise<Awaited<ReturnType<MammothConverter["convertToHtml"]>>> {
+  try {
+    return await mammothModule.convertToHtml({ arrayBuffer: buffer });
+  } catch (error) {
+    if (!(error instanceof Error) || error.message !== "Could not find file in options") {
+      throw error;
+    }
+
+    if (typeof Buffer === "undefined") {
+      throw error;
+    }
+
+    const fallbackInput = { buffer: Buffer.from(buffer) };
+    return mammothModule.convertToHtml(fallbackInput);
+  }
+}
+
 async function loadMammothModule(): Promise<MammothConverter> {
   if (mammothLoaderForTesting) {
     return mammothLoaderForTesting();
   }
 
-  const mammothModule = await import("mammoth");
-  return ("default" in mammothModule ? mammothModule.default : mammothModule) as unknown as MammothConverter;
+  try {
+    return resolveMammothModule(await import("mammoth/mammoth.browser.js"));
+  } catch {
+    return resolveMammothModule(await import("mammoth"));
+  }
 }
 
 async function renderDocx(context: FilePreviewRenderContext): Promise<HTMLElement> {
   const [mammothModule, buffer] = await Promise.all([loadMammothModule(), fetchBinaryContent(context)]);
   const wrapper = createContainer("fpk-office-preview");
   const title = createSectionTitle("Document preview");
-  const result = await mammothModule.convertToHtml({ buffer });
+  const result = await convertDocxToHtml(mammothModule, buffer);
   const article = document.createElement("article");
   article.className = "fpk-docx-preview";
 

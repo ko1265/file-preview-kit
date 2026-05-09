@@ -1,0 +1,31 @@
+<svg width="1600" height="900" viewBox="0 0 1600 900" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">file-preview-kit v1.0-prep launch card</title>
+  <desc id="desc">A public demo launch asset showing the browser-only preview story, auth-shaped request handling, Office extracts, and media previews.</desc>
+  <rect width="1600" height="900" fill="#0B1220"/>
+  <rect x="96" y="96" width="1408" height="708" rx="36" fill="#111B31" stroke="#263554" stroke-width="2"/>
+  <circle cx="1390" cy="164" r="96" fill="#22C55E" fill-opacity="0.18"/>
+  <circle cx="1250" cy="720" r="140" fill="#F472B6" fill-opacity="0.12"/>
+  <circle cx="240" cy="180" r="120" fill="#38BDF8" fill-opacity="0.10"/>
+  <text x="160" y="205" fill="#7DD3FC" font-family="Segoe UI, Arial, sans-serif" font-size="28" font-weight="700" letter-spacing="2">FILE PREVIEW KIT</text>
+  <text x="160" y="320" fill="#FFFFFF" font-family="Segoe UI, Arial, sans-serif" font-size="82" font-weight="800">Browser-only remote file preview</text>
+  <text x="160" y="392" fill="#CBD5E1" font-family="Segoe UI, Arial, sans-serif" font-size="34" font-weight="400">v1.0-prep release story with public URL, auth-shaped request handling,</text>
+  <text x="160" y="436" fill="#CBD5E1" font-family="Segoe UI, Arial, sans-serif" font-size="34" font-weight="400">Office extracts, and native media previews.</text>
+  <g transform="translate(160 510)">
+    <rect width="256" height="56" rx="28" fill="#1D4ED8"/>
+    <text x="28" y="37" fill="#FFFFFF" font-family="Segoe UI, Arial, sans-serif" font-size="24" font-weight="700">Public README</text>
+  </g>
+  <g transform="translate(432 510)">
+    <rect width="320" height="56" rx="28" fill="#0F766E"/>
+    <text x="28" y="37" fill="#FFFFFF" font-family="Segoe UI, Arial, sans-serif" font-size="24" font-weight="700">Auth-shaped request</text>
+  </g>
+  <g transform="translate(768 510)">
+    <rect width="248" height="56" rx="28" fill="#7C3AED"/>
+    <text x="28" y="37" fill="#FFFFFF" font-family="Segoe UI, Arial, sans-serif" font-size="24" font-weight="700">Office extracts</text>
+  </g>
+  <g transform="translate(1032 510)">
+    <rect width="220" height="56" rx="28" fill="#EA580C"/>
+    <text x="28" y="37" fill="#FFFFFF" font-family="Segoe UI, Arial, sans-serif" font-size="24" font-weight="700">Media previews</text>
+  </g>
+  <text x="160" y="680" fill="#94A3B8" font-family="Segoe UI, Arial, sans-serif" font-size="24" font-weight="400">Readable extracts, not layout-faithful Office rendering. No server-side conversion.</text>
+  <text x="160" y="726" fill="#94A3B8" font-family="Segoe UI, Arial, sans-serif" font-size="24" font-weight="400">Use this card as the screenshot-level public release visual.</text>
+</svg>

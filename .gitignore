@@ -7,3 +7,9 @@ coverage
 pnpm-lock.yaml
 .DS_Store
 *.tgz
+artifacts/
+apps/demo/main.js
+apps/demo/main.js.map
+apps/demo/main.d.ts.map
+AGENT_STATUS.md
+STATUS.md

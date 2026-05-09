@@ -2,7 +2,26 @@
 
 [English](#file-preview-kit) | [中文](README.zh.md)
 
-`file-preview-kit` is a pure-frontend TypeScript monorepo for remote file preview using Web Components. It is built around browser-only rendering, clean package boundaries, and a plugin-driven architecture that is being hardened toward a practical `v0.2`.
+`file-preview-kit` is a pure-frontend TypeScript monorepo for remote file preview using Web Components. It is built around browser-only rendering, clean package boundaries, and a plugin-driven architecture that is being hardened toward a practical `v1.0-prep` release.
+
+## Important: remote file access requirements
+
+`file-preview-kit` fetches previewable files directly in the browser. A remote file URL must therefore be browser-readable, not just publicly reachable in a separate tab. Deploying your app on `https` does not automatically remove cross-origin restrictions.
+
+For reliable production use, prefer:
+
+- same-origin files served by the host application
+- user-controlled object storage or CDN with correct `CORS` headers
+- a backend proxy that re-serves third-party files under the app's own domain
+
+Remote preview can still fail with `failed to fetch` when the file source has:
+
+- missing or restrictive `CORS` headers
+- `http` / `https` protocol mismatch
+- auth requirements that are not compatible with direct browser fetches
+- unstable third-party endpoints or anti-hotlink protections
+
+If your product needs stable remote preview, plan for a controlled file distribution layer such as same-origin files, object storage/CDN, or a backend proxy.
 
 ## What it covers
 
@@ -45,6 +64,35 @@ pnpm add @file-preview-kit/core
   - `xlsx`: structured worksheet table rendering via SheetJS, with sheet and row/column truncation for stability
   - `pptx`: slide text extraction via JSZip
 - Fallback: a friendly unsupported state
+
+## Open-source credits
+
+`file-preview-kit` deliberately builds on top of several strong open-source libraries instead of re-implementing mature preview primitives from scratch.
+
+Key upstream dependencies include:
+
+- `pdf.js` for PDF rendering
+- `Mammoth` for `docx` extraction
+- `SheetJS` for `xlsx` parsing
+- `JSZip` for archive-based Office formats such as `pptx`
+- `marked`, `DOMPurify`, and `highlight.js` for markdown and code presentation
+
+This project benefits directly from the work of those maintainers, and the public README should acknowledge that clearly.
+
+## Public demo
+
+The demo intentionally focuses on a small set of release-representative scenarios:
+
+- Public URL preview from a remote README
+- Auth-shaped request handling with `requestConfig`
+- Office `docx`, `xlsx`, and `pptx` extraction previews
+- Native media previews for image, audio, and video
+
+The Office demo scenes use local static samples so release screenshots do not depend on unstable third-party files.
+
+The auth example is there to show request shaping, not to promise that any single public endpoint will stay available forever.
+
+If the release visual needs a refresh, use [LAUNCH_ASSET.svg](LAUNCH_ASSET.svg) together with [SCREENSHOT_CHECKLIST.md](SCREENSHOT_CHECKLIST.md) and its manual fallback path.
 
 ## Quick start
 
@@ -169,6 +217,11 @@ pnpm pack:check
 - The published packages are `@file-preview-kit/shared`, `@file-preview-kit/core`, and `@file-preview-kit/web-components`.
 - Package metadata now includes repository, bugs, and homepage links.
 - Tarball generation is verified with `pnpm pack:check`.
+- Public demo framing is captured in [PUBLIC_DEMO_NOTE.md](PUBLIC_DEMO_NOTE.md).
+- Public launch assets are captured in [PUBLIC_LAUNCH_ASSETS.md](PUBLIC_LAUNCH_ASSETS.md).
+- Final release review path is captured in [SCREENSHOT_CHECKLIST.md](SCREENSHOT_CHECKLIST.md).
+- Final release checks are captured in [RELEASE_CHECKLIST.md](RELEASE_CHECKLIST.md).
+- Release-readiness gaps and public demo framing are tracked in [RELEASE_READINESS.md](RELEASE_READINESS.md).
 
 ## Docs
 
@@ -178,6 +231,10 @@ pnpm pack:check
 ## Notes
 
 - Remote preview still depends on browser CORS rules
+- Remote file sources must be browser-readable, not just public in a separate tab
+- Deploying the host app on `https` does not remove cross-origin fetch restrictions by itself
+- The most reliable production setup is same-origin files, object storage/CDN with correct CORS, or a backend proxy
 - Browser credentials and headers cannot force access to cross-origin URLs that do not allow the request
 - PDF support includes a larger optional `pdf.js` worker asset
 - Office previews favor readable extracted content over layout-faithful reproduction
+- Public demo URLs are intentionally lightweight and may change over time
