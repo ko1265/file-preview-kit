@@ -21,6 +21,7 @@ This note now points to the short, final-facing release checklist and keeps only
 - Manual review is the release path for any scene that is not worth re-validating in this environment.
 - `LAUNCH_ASSET.svg` remains the fallback release-facing visual for the package and README story.
 - The screenshot checklist is the minimal release-check path for the remaining blocked or low-priority scenes.
+- When the full local `vitest` flow is blocked by the current runtime, the release-prep signoff path falls back to the narrow TypeScript/demo checks plus manual screenshot review.
 
 ## Next Read
 

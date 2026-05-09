@@ -8,6 +8,7 @@ Updated: 2026-05-09
 2. Keep the root planning docs in sync so future work can start from a single release-oriented source of truth.
 3. Re-run the narrow validation set that matters for release prep.
 4. Treat `LAUNCH_ASSET.svg` plus the manual screenshot fallback path as the public-facing closeout for `v1.0-prep`.
+5. Use [NPM_PUBLISH_CHECKLIST.md](NPM_PUBLISH_CHECKLIST.md) to drive the first real npm release work instead of leaving package publication implicit.
 
 ## Decision Points
 

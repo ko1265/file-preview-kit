@@ -30,6 +30,9 @@ The project is moving from feature completion into release-facing hardening. The
 4. Release hygiene
    - Keep build, test, and package-packing checks green.
    - Watch for regressions in package entrypoints, example URLs, or browser compatibility.
+5. npm publication readiness
+   - Treat first-class npm consumption as part of the release goal, not as a postscript.
+   - Verify scope ownership, publish order, and clean consumer installation before calling the release done.
 
 ## Exit Criteria For `v1.0-prep`
 
@@ -44,4 +47,3 @@ The project is moving from feature completion into release-facing hardening. The
 - Editing workflows.
 - Layout-faithful Office rendering.
 - Expanding into legacy `doc`, `xls`, or `ppt` support.
-
