@@ -40,6 +40,7 @@ For simple HTML embedding:
 
 ## Notes
 
+- Remote preview still depends on the browser being able to fetch the file source. For reliable production use, prefer same-origin files, controlled object storage/CDN with correct CORS, or a backend proxy.
 - Use the `requestConfig` property when you need structured request options such as auth tokens or Office workbook limits.
 - Attribute-based configuration is useful for simple HTML usage, but the property API is the more complete integration surface.
 - Request headers and auth settings only affect fetch-based previewers, not native media elements.

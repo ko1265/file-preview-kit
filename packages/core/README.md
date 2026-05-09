@@ -46,6 +46,7 @@ const service = new FilePreviewService({
 
 ## Notes
 
+- Remote preview still depends on the browser being able to fetch the file source. For reliable production use, prefer same-origin files, controlled object storage/CDN with correct CORS, or a backend proxy.
 - Request configuration applies to fetch-based previewers.
 - Native media previewers still use the source URL directly.
 - Office previews are readable browser previews, not fidelity-preserving Office renderers.
