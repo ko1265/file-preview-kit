@@ -19,7 +19,7 @@
     "clean": "pnpm -r clean",
     "dev": "pnpm --filter @ko1265/file-preview-kit-demo dev",
     "lint": "pnpm -r lint",
-    "pack:check": "pnpm -r --filter ./packages/* exec pnpm pack",
+    "pack:check": "node ./scripts/pack-publishable-packages.mjs",
     "pack:verify": "pnpm pack:check && node scripts/verify-packed-packages.mjs",
     "smoke:consumer": "node ./scripts/run-consumer-smoke.mjs",
     "test": "vitest run",
