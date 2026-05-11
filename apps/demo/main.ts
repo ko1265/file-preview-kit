@@ -1,7 +1,7 @@
 import {
   registerFilePreviewElement,
   type FilePreviewElement
-} from "@file-preview-kit/web-components";
+} from "@ko1265/file-preview-kit-web-components";
 
 type Locale = "en" | "zh";
 

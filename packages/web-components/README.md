@@ -1,4 +1,4 @@
-# @file-preview-kit/web-components
+# @ko1265/file-preview-kit-web-components
 
 Standalone Web Components wrapper for `file-preview-kit`.
 
@@ -11,13 +11,13 @@ Standalone Web Components wrapper for `file-preview-kit`.
 ## Install
 
 ```bash
-pnpm add @file-preview-kit/web-components
+pnpm add @ko1265/file-preview-kit-web-components
 ```
 
 ## Usage
 
 ```ts
-import { registerFilePreviewElement } from "@file-preview-kit/web-components";
+import { registerFilePreviewElement } from "@ko1265/file-preview-kit-web-components";
 
 registerFilePreviewElement();
 
@@ -44,3 +44,4 @@ For simple HTML embedding:
 - Use the `requestConfig` property when you need structured request options such as auth tokens or Office workbook limits.
 - Attribute-based configuration is useful for simple HTML usage, but the property API is the more complete integration surface.
 - Request headers and auth settings only affect fetch-based previewers, not native media elements.
+- The custom element emits `file-preview:loadstart`, `file-preview:load`, and `file-preview:error` events so host apps can track loading state or surface failures.

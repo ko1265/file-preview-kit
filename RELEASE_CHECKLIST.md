@@ -9,7 +9,7 @@ Updated: 2026-05-09
 3. Otherwise, re-run the narrow validation set that matters for this prep pass:
    - `pnpm.cmd exec tsc -b tsconfig.json`
    - the targeted demo regression checks used during signoff
-4. `pnpm pack:check`
+4. `pnpm pack:verify`
 5. Confirm the demo opens with the compact public sample set.
 6. Confirm `PUBLIC_DEMO_NOTE.md`, `PUBLIC_LAUNCH_ASSETS.md`, `SCREENSHOT_CHECKLIST.md`, and `LAUNCH_ASSET.svg` match the README release framing.
 7. Confirm no new Office sample breadth was added in this prep pass.

@@ -1,5 +1,5 @@
 {
-  "name": "@file-preview-kit/web-components",
+  "name": "@ko1265/file-preview-kit-web-components",
   "version": "0.1.0",
   "description": "Standalone Web Components file preview element for remote URLs.",
   "license": "MIT",
@@ -25,8 +25,8 @@
   },
   "files": ["dist"],
   "dependencies": {
-    "@file-preview-kit/core": "workspace:*",
-    "@file-preview-kit/shared": "workspace:*"
+    "@ko1265/file-preview-kit-core": "workspace:*",
+    "@ko1265/file-preview-kit-shared": "workspace:*"
   },
   "keywords": ["file-preview", "web-components", "custom-elements", "frontend"],
   "publishConfig": {

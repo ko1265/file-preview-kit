@@ -5,7 +5,7 @@ import type {
   FilePreviewRequestResolver,
   FilePreviewResolution,
   FileSource
-} from "@file-preview-kit/shared";
+} from "@ko1265/file-preview-kit-shared";
 import { FilePreviewRegistry } from "./preview-registry";
 import { createDefaultPlugins } from "./plugins";
 import { defaultPreviewFetcher, mergeRequestConfigs } from "./request";

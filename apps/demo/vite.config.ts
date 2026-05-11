@@ -8,13 +8,13 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      "@file-preview-kit/web-components": fileURLToPath(
+      "@ko1265/file-preview-kit-web-components": fileURLToPath(
         new URL("../../packages/web-components/src/index.ts", import.meta.url)
       ),
-      "@file-preview-kit/core": fileURLToPath(
+      "@ko1265/file-preview-kit-core": fileURLToPath(
         new URL("../../packages/core/src/index.ts", import.meta.url)
       ),
-      "@file-preview-kit/shared": fileURLToPath(
+      "@ko1265/file-preview-kit-shared": fileURLToPath(
         new URL("../../packages/shared/src/index.ts", import.meta.url)
       )
     }

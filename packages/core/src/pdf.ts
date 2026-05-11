@@ -1,4 +1,4 @@
-import type { FilePreviewPlugin, FilePreviewRenderContext } from "@file-preview-kit/shared";
+import type { FilePreviewPlugin, FilePreviewRenderContext } from "@ko1265/file-preview-kit-shared";
 import { hasExtension, hasMimeType } from "./file-source";
 import { fetchBinaryContent } from "./content";
 import { createContainer, createMessageCard } from "./render-utils";

@@ -1,4 +1,4 @@
-# @file-preview-kit/core
+# @ko1265/file-preview-kit-core
 
 Core preview registry, request handling, and built-in preview plugins for `file-preview-kit`.
 
@@ -12,13 +12,13 @@ Core preview registry, request handling, and built-in preview plugins for `file-
 ## Install
 
 ```bash
-pnpm add @file-preview-kit/core
+pnpm add @ko1265/file-preview-kit-core
 ```
 
 ## Usage
 
 ```ts
-import { FilePreviewService } from "@file-preview-kit/core";
+import { FilePreviewService } from "@ko1265/file-preview-kit-core";
 
 const service = new FilePreviewService();
 const node = await service.render({

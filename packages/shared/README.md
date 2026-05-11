@@ -1,4 +1,4 @@
-# @file-preview-kit/shared
+# @ko1265/file-preview-kit-shared
 
 Shared preview contracts and types for `file-preview-kit`.
 
@@ -12,7 +12,7 @@ Shared preview contracts and types for `file-preview-kit`.
 ## Install
 
 ```bash
-pnpm add @file-preview-kit/shared
+pnpm add @ko1265/file-preview-kit-shared
 ```
 
 ## Usage
@@ -22,7 +22,7 @@ import type {
   FilePreviewPlugin,
   FilePreviewRequestConfig,
   FileSource
-} from "@file-preview-kit/shared";
+} from "@ko1265/file-preview-kit-shared";
 ```
 
-This package is type-focused. Most applications will consume it indirectly through `@file-preview-kit/core` or `@file-preview-kit/web-components`.
+This package is type-focused. Most applications will consume it indirectly through `@ko1265/file-preview-kit-core` or `@ko1265/file-preview-kit-web-components`.

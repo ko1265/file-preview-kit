@@ -1,9 +1,9 @@
-import { FilePreviewService } from "@file-preview-kit/core";
+import { FilePreviewService } from "@ko1265/file-preview-kit-core";
 import type {
   FilePreviewOfficeRequestConfig,
   FilePreviewRequestConfig,
   FileSource
-} from "@file-preview-kit/shared";
+} from "@ko1265/file-preview-kit-shared";
 import { previewStyles } from "./styles";
 
 export interface FilePreviewElementAttributes {
@@ -17,6 +17,20 @@ export interface FilePreviewElementAttributes {
   workbookMaxSheets?: string;
   workbookMaxRows?: string;
   workbookMaxColumns?: string;
+}
+
+export interface FilePreviewLoadStartDetail {
+  source: FileSource;
+}
+
+export interface FilePreviewLoadDetail {
+  source: FileSource;
+}
+
+export interface FilePreviewErrorDetail {
+  source: FileSource | null;
+  message: string;
+  error: unknown;
 }
 
 export class FilePreviewElement extends HTMLElement {
@@ -230,6 +244,34 @@ export class FilePreviewElement extends HTMLElement {
     }
   }
 
+  private dispatchLoadStart(source: FileSource): void {
+    this.dispatchEvent(
+      new CustomEvent<FilePreviewLoadStartDetail>("file-preview:loadstart", {
+        detail: { source }
+      })
+    );
+  }
+
+  private dispatchLoad(source: FileSource): void {
+    this.dispatchEvent(
+      new CustomEvent<FilePreviewLoadDetail>("file-preview:load", {
+        detail: { source }
+      })
+    );
+  }
+
+  private dispatchError(source: FileSource | null, error: unknown, message: string): void {
+    this.dispatchEvent(
+      new CustomEvent<FilePreviewErrorDetail>("file-preview:error", {
+        detail: {
+          source,
+          message,
+          error
+        }
+      })
+    );
+  }
+
   async refresh(): Promise<void> {
     const refreshVersion = ++this.refreshVersion;
 
@@ -248,12 +290,14 @@ export class FilePreviewElement extends HTMLElement {
         source.fileName ?? new URL(source.url, window.location.href).pathname.split("/").at(-1) ?? source.url
       );
       this.setViewport(this.createState("loading", "Loading preview..."));
+      this.dispatchLoadStart(source);
 
       const node = await this.service.render(source, currentController.signal);
       if (refreshVersion !== this.refreshVersion || currentController.signal.aborted) {
         return;
       }
       this.setViewport(node);
+      this.dispatchLoad(source);
     } catch (error) {
       if (
         refreshVersion !== this.refreshVersion ||
@@ -265,6 +309,7 @@ export class FilePreviewElement extends HTMLElement {
 
       const message = error instanceof Error ? error.message : "Unknown preview error";
       this.setViewport(this.createState("error", message));
+      this.dispatchError(this.source, error, message);
     }
   }
 

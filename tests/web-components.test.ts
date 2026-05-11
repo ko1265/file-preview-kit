@@ -248,6 +248,200 @@ describe("FilePreviewElement", () => {
     expect(element.shadowRoot.textContent).not.toContain("AbortError");
   });
 
+  it("emits load lifecycle events for successful previews", async () => {
+    const events: Array<{ type: string; detail: unknown }> = [];
+    const element = document.createElement(testTag) as HTMLElement & {
+      previewService: { render: () => Promise<HTMLElement> };
+      setAttribute(name: string, value: string): void;
+    };
+
+    element.previewService = {
+      async render() {
+        const node = document.createElement("div");
+        node.textContent = "Loaded preview";
+        return node;
+      }
+    };
+
+    element.addEventListener("file-preview:loadstart", (event) => {
+      events.push({ type: event.type, detail: (event as CustomEvent).detail });
+    });
+    element.addEventListener("file-preview:load", (event) => {
+      events.push({ type: event.type, detail: (event as CustomEvent).detail });
+    });
+
+    document.body.append(element);
+    element.setAttribute("src", "https://example.com/guide.md");
+
+    await Promise.resolve();
+    await Promise.resolve();
+
+    expect(events.map((event) => event.type)).toEqual([
+      "file-preview:loadstart",
+      "file-preview:load"
+    ]);
+    expect(events[0]?.detail).toMatchObject({
+      source: {
+        url: "https://example.com/guide.md"
+      }
+    });
+    expect(events[1]?.detail).toMatchObject({
+      source: {
+        url: "https://example.com/guide.md"
+      }
+    });
+  });
+
+  it("suppresses stale completion events when src changes mid-render", async () => {
+    const events: Array<{ type: string; detail: unknown }> = [];
+    let resolveFirstRender: ((node: HTMLElement) => void) | undefined;
+    const element = document.createElement(testTag) as HTMLElement & {
+      previewService: { render: (source: { url: string }) => Promise<HTMLElement> };
+      setAttribute(name: string, value: string): void;
+      shadowRoot: ShadowRoot;
+    };
+
+    element.previewService = {
+      async render(source) {
+        if (source.url.endsWith("first.txt")) {
+          return await new Promise<HTMLElement>((resolve) => {
+            resolveFirstRender = resolve;
+          });
+        }
+
+        const node = document.createElement("div");
+        node.textContent = "Second preview";
+        return node;
+      }
+    };
+
+    element.addEventListener("file-preview:loadstart", (event) => {
+      events.push({ type: event.type, detail: (event as CustomEvent).detail });
+    });
+    element.addEventListener("file-preview:load", (event) => {
+      events.push({ type: event.type, detail: (event as CustomEvent).detail });
+    });
+    element.addEventListener("file-preview:error", (event) => {
+      events.push({ type: event.type, detail: (event as CustomEvent).detail });
+    });
+
+    document.body.append(element);
+    element.setAttribute("src", "https://example.com/first.txt");
+    await Promise.resolve();
+    element.setAttribute("src", "https://example.com/second.txt");
+
+    await vi.waitFor(() => {
+      expect(element.shadowRoot.querySelector(".viewport")?.textContent).toContain("Second preview");
+    });
+
+    const staleNode = document.createElement("div");
+    staleNode.textContent = "First preview";
+    resolveFirstRender?.(staleNode);
+    await Promise.resolve();
+    await Promise.resolve();
+
+    expect(events.map((event) => event.type)).toEqual([
+      "file-preview:loadstart",
+      "file-preview:loadstart",
+      "file-preview:load"
+    ]);
+    expect(events[2]?.detail).toMatchObject({
+      source: {
+        url: "https://example.com/second.txt"
+      }
+    });
+    expect(element.shadowRoot.querySelector(".viewport")?.textContent).toContain("Second preview");
+    expect(element.shadowRoot.querySelector(".viewport")?.textContent).not.toContain("First preview");
+  });
+
+  it("emits an error event when preview rendering fails", async () => {
+    const element = document.createElement(testTag) as HTMLElement & {
+      previewService: { render: () => Promise<HTMLElement> };
+      setAttribute(name: string, value: string): void;
+    };
+    const captured: Array<CustomEvent> = [];
+
+    element.previewService = {
+      async render() {
+        throw new Error("Boom");
+      }
+    };
+
+    element.addEventListener("file-preview:error", (event) => {
+      captured.push(event as CustomEvent);
+    });
+
+    document.body.append(element);
+    element.setAttribute("src", "https://example.com/failure.txt");
+
+    await Promise.resolve();
+    await Promise.resolve();
+
+    expect(captured).toHaveLength(1);
+    expect(captured[0]?.detail).toMatchObject({
+      source: {
+        url: "https://example.com/failure.txt"
+      },
+      message: "Boom"
+    });
+    expect(element.shadowRoot?.textContent).toContain("Boom");
+  });
+
+  it("suppresses stale error events when src changes before a failure resolves", async () => {
+    const events: Array<{ type: string; detail: unknown }> = [];
+    let rejectFirstRender: ((error: Error) => void) | undefined;
+    const element = document.createElement(testTag) as HTMLElement & {
+      previewService: { render: (source: { url: string }) => Promise<HTMLElement> };
+      setAttribute(name: string, value: string): void;
+      shadowRoot: ShadowRoot;
+    };
+
+    element.previewService = {
+      async render(source) {
+        if (source.url.endsWith("first.txt")) {
+          return await new Promise<HTMLElement>((_resolve, reject) => {
+            rejectFirstRender = reject;
+          });
+        }
+
+        const node = document.createElement("div");
+        node.textContent = "Recovered preview";
+        return node;
+      }
+    };
+
+    element.addEventListener("file-preview:loadstart", (event) => {
+      events.push({ type: event.type, detail: (event as CustomEvent).detail });
+    });
+    element.addEventListener("file-preview:load", (event) => {
+      events.push({ type: event.type, detail: (event as CustomEvent).detail });
+    });
+    element.addEventListener("file-preview:error", (event) => {
+      events.push({ type: event.type, detail: (event as CustomEvent).detail });
+    });
+
+    document.body.append(element);
+    element.setAttribute("src", "https://example.com/first.txt");
+    await Promise.resolve();
+    element.setAttribute("src", "https://example.com/second.txt");
+
+    await vi.waitFor(() => {
+      expect(element.shadowRoot.querySelector(".viewport")?.textContent).toContain("Recovered preview");
+    });
+
+    rejectFirstRender?.(new Error("Stale failure"));
+    await Promise.resolve();
+    await Promise.resolve();
+
+    expect(events.map((event) => event.type)).toEqual([
+      "file-preview:loadstart",
+      "file-preview:loadstart",
+      "file-preview:load"
+    ]);
+    expect(element.shadowRoot.querySelector(".viewport")?.textContent).toContain("Recovered preview");
+    expect(element.shadowRoot.querySelector(".viewport")?.textContent).not.toContain("Stale failure");
+  });
+
   it("renders workbook previews inside the custom element with compact office limits", async () => {
     const workbook = createWorkbookFixture({ sheetCount: 4 });
     vi.stubGlobal(

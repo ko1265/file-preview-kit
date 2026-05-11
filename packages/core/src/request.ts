@@ -2,7 +2,7 @@ import type {
   FilePreviewFetchContext,
   FilePreviewFetcher,
   FilePreviewRequestConfig
-} from "@file-preview-kit/shared";
+} from "@ko1265/file-preview-kit-shared";
 
 export function mergeRequestConfigs(
   ...configs: Array<FilePreviewRequestConfig | undefined>

@@ -1,5 +1,5 @@
 {
-  "name": "@file-preview-kit/core",
+  "name": "@ko1265/file-preview-kit-core",
   "version": "0.1.0",
   "description": "Core preview registry and built-in plugins for file-preview-kit.",
   "license": "MIT",
@@ -25,7 +25,7 @@
   },
   "files": ["dist"],
   "dependencies": {
-    "@file-preview-kit/shared": "workspace:*",
+    "@ko1265/file-preview-kit-shared": "workspace:*",
     "dompurify": "^3.4.2",
     "highlight.js": "^11.11.1",
     "jszip": "^3.10.1",

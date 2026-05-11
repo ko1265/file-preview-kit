@@ -11,6 +11,9 @@ This note now points to the short, final-facing release checklist and keeps only
 - Auth-shaped request handling is documented and exercised.
 - Office preview scope is explicitly limited to readable browser extracts.
 - Package READMEs and repo status files are aligned with the current release phase.
+- Packed tarball structure is now verified with `pnpm pack:verify`.
+- A clean external-consumer smoke path now exists via `pnpm smoke:consumer`.
+- The first public npm version is now locked to `0.1.0`.
 
 ## Still True
 
@@ -22,6 +25,7 @@ This note now points to the short, final-facing release checklist and keeps only
 - `LAUNCH_ASSET.svg` remains the fallback release-facing visual for the package and README story.
 - The screenshot checklist is the minimal release-check path for the remaining blocked or low-priority scenes.
 - When the full local `vitest` flow is blocked by the current runtime, the release-prep signoff path falls back to the narrow TypeScript/demo checks plus manual screenshot review.
+- A first public release still needs the actual publish run plus one post-publish registry install check.
 
 ## Next Read
 

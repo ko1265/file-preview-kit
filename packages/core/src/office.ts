@@ -2,7 +2,7 @@ import type {
   FilePreviewRenderContext,
   FilePreviewPlugin,
   FilePreviewWorkbookPreviewOptions
-} from "@file-preview-kit/shared";
+} from "@ko1265/file-preview-kit-shared";
 import { hasExtension } from "./file-source";
 import { fetchBinaryContent } from "./content";
 import { createContainer, createMessageCard, createParagraph, createSectionTitle } from "./render-utils";

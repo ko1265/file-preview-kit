@@ -1,4 +1,4 @@
-import type { FileSource, ResolvedFileSource } from "@file-preview-kit/shared";
+import type { FileSource, ResolvedFileSource } from "@ko1265/file-preview-kit-shared";
 
 const EXTENSION_PATTERN = /\.([a-z0-9]+)$/i;
 
@@ -25,4 +25,3 @@ export function hasMimeType(source: ResolvedFileSource, mimeTypes: string[]): bo
   const mimeType = source.mimeType?.toLowerCase();
   return Boolean(mimeType && mimeTypes.includes(mimeType));
 }
-

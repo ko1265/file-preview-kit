@@ -34,22 +34,22 @@ If your product needs stable remote preview, plan for a controlled file distribu
 
 ## Packages
 
-- `@file-preview-kit/shared`: shared preview contracts and types
-- `@file-preview-kit/core`: normalization, registry, service layer, and built-in plugins
-- `@file-preview-kit/web-components`: the `file-preview` custom element
+- `@ko1265/file-preview-kit-shared`: shared preview contracts and types
+- `@ko1265/file-preview-kit-core`: normalization, registry, service layer, and built-in plugins
+- `@ko1265/file-preview-kit-web-components`: the `file-preview` custom element
 
 ## Install
 
 For the custom element:
 
 ```bash
-pnpm add @file-preview-kit/web-components
+pnpm add @ko1265/file-preview-kit-web-components
 ```
 
 For the service and plugin registry directly:
 
 ```bash
-pnpm add @file-preview-kit/core
+pnpm add @ko1265/file-preview-kit-core
 ```
 
 ## Previewers
@@ -97,7 +97,7 @@ If the release visual needs a refresh, use [LAUNCH_ASSET.svg](LAUNCH_ASSET.svg) 
 ## Quick start
 
 ```ts
-import { registerFilePreviewElement } from "@file-preview-kit/web-components";
+import { registerFilePreviewElement } from "@ko1265/file-preview-kit-web-components";
 
 registerFilePreviewElement();
 
@@ -123,7 +123,7 @@ Element attributes are useful for simple HTML embedding:
 ```
 
 ```ts
-import { FilePreviewService } from "@file-preview-kit/core";
+import { FilePreviewService } from "@ko1265/file-preview-kit-core";
 
 const service = new FilePreviewService({
   defaultRequest: {
@@ -194,6 +194,7 @@ preview.requestConfig = {
 - Element attributes cover the simple request fields (`headers`, `credentials`, `auth-token`, `auth-scheme`), while the `requestConfig` property is the complete surface for nested options such as `office.workbook`.
 - `resolveRequest` runs after the default request and per-file request are merged, so it is the right place for token refresh or per-URL auth shaping.
 - `authToken` only injects an `Authorization` header for fetch-based previews. If you already set `Authorization` in `headers`, that explicit header wins.
+- The custom element emits `file-preview:loadstart`, `file-preview:load`, and `file-preview:error` on the element itself so host apps can reflect loading state or surface failures.
 
 ## Office preview scope
 
@@ -209,14 +210,18 @@ pnpm install
 pnpm build
 pnpm dev
 pnpm test
-pnpm pack:check
+pnpm pack:verify
+pnpm smoke:consumer
 ```
+
+`pnpm smoke:consumer` builds the publishable packages, packs local tarballs, installs them into a clean sample app, and verifies that an external consumer can import `@ko1265/file-preview-kit-core` and `@ko1265/file-preview-kit-web-components`.
 
 ## Release notes
 
-- The published packages are `@file-preview-kit/shared`, `@file-preview-kit/core`, and `@file-preview-kit/web-components`.
+- The published packages are `@ko1265/file-preview-kit-shared`, `@ko1265/file-preview-kit-core`, and `@ko1265/file-preview-kit-web-components`.
 - Package metadata now includes repository, bugs, and homepage links.
-- Tarball generation is verified with `pnpm pack:check`.
+- Tarball generation is verified with `pnpm pack:verify`.
+- A repeatable packed-tarball consumer check is available via `pnpm smoke:consumer`.
 - Public demo framing is captured in [PUBLIC_DEMO_NOTE.md](PUBLIC_DEMO_NOTE.md).
 - Public launch assets are captured in [PUBLIC_LAUNCH_ASSETS.md](PUBLIC_LAUNCH_ASSETS.md).
 - Final release review path is captured in [SCREENSHOT_CHECKLIST.md](SCREENSHOT_CHECKLIST.md).

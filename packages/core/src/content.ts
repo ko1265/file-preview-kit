@@ -1,4 +1,4 @@
-import type { FilePreviewRenderContext } from "@file-preview-kit/shared";
+import type { FilePreviewRenderContext } from "@ko1265/file-preview-kit-shared";
 import { createRequestInit } from "./request";
 
 function createFetchInit(context: FilePreviewRenderContext): RequestInit | undefined {

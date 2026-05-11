@@ -5,7 +5,7 @@ import type {
   FilePreviewMatchContext,
   FilePreviewPlugin,
   FilePreviewRenderContext
-} from "@file-preview-kit/shared";
+} from "@ko1265/file-preview-kit-shared";
 import { hasExtension, hasMimeType } from "./file-source";
 import { officePlugin } from "./office";
 import { pdfPlugin } from "./pdf";

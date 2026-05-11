@@ -2,7 +2,7 @@ import type {
   FilePreviewPlugin,
   FilePreviewResolution,
   FileSource
-} from "@file-preview-kit/shared";
+} from "@ko1265/file-preview-kit-shared";
 import { normalizeFileSource } from "./file-source";
 
 export class FilePreviewRegistry {
@@ -37,4 +37,3 @@ export class FilePreviewRegistry {
     return null;
   }
 }
-

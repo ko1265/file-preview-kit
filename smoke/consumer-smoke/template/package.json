@@ -1,0 +1,8 @@
+{
+  "name": "file-preview-kit-consumer-smoke",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "verify": "node ./verify-consumer.mjs"
+  }
+}

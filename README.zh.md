@@ -34,22 +34,22 @@
 
 ## 包
 
-- `@file-preview-kit/shared`：共享预览协议与类型
-- `@file-preview-kit/core`：归一化、插件注册表、服务层和内置插件
-- `@file-preview-kit/web-components`：`file-preview` 自定义元素
+- `@ko1265/file-preview-kit-shared`：共享预览协议与类型
+- `@ko1265/file-preview-kit-core`：归一化、插件注册表、服务层和内置插件
+- `@ko1265/file-preview-kit-web-components`：`file-preview` 自定义元素
 
 ## 安装
 
 安装自定义元素：
 
 ```bash
-pnpm add @file-preview-kit/web-components
+pnpm add @ko1265/file-preview-kit-web-components
 ```
 
 直接使用服务层和插件注册表：
 
 ```bash
-pnpm add @file-preview-kit/core
+pnpm add @ko1265/file-preview-kit-core
 ```
 
 ## 预览器
@@ -82,7 +82,7 @@ pnpm add @file-preview-kit/core
 ## 快速开始
 
 ```ts
-import { registerFilePreviewElement } from "@file-preview-kit/web-components";
+import { registerFilePreviewElement } from "@ko1265/file-preview-kit-web-components";
 
 registerFilePreviewElement();
 
@@ -108,7 +108,7 @@ document.body.append(preview);
 ```
 
 ```ts
-import { FilePreviewService } from "@file-preview-kit/core";
+import { FilePreviewService } from "@ko1265/file-preview-kit-core";
 
 const service = new FilePreviewService({
   defaultRequest: {
@@ -199,7 +199,7 @@ pnpm pack:check
 
 ## 发布说明
 
-- 已发布的包是 `@file-preview-kit/shared`、`@file-preview-kit/core` 和 `@file-preview-kit/web-components`
+- 已发布的包是 `@ko1265/file-preview-kit-shared`、`@ko1265/file-preview-kit-core` 和 `@ko1265/file-preview-kit-web-components`
 - 包元数据已包含 repository、bugs 和 homepage 链接
 - 使用 `pnpm pack:check` 验证 tarball 生成
 - 公共演示说明见 [PUBLIC_DEMO_NOTE.md](PUBLIC_DEMO_NOTE.md)
