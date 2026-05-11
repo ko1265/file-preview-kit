@@ -1,12 +1,14 @@
 import { spawn } from "node:child_process";
 import { existsSync } from "node:fs";
-import { cp, mkdir, readFile, readdir, realpath, rm, writeFile } from "node:fs/promises";
+import { cp, mkdir, readFile, readdir, rm, writeFile } from "node:fs/promises";
 import path from "node:path";
+import { createRequire } from "node:module";
 import { fileURLToPath } from "node:url";
 import { gunzipSync } from "node:zlib";
 
 const scriptDir = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(scriptDir, "..");
+const require = createRequire(import.meta.url);
 const smokeRoot = path.join(repoRoot, "smoke", "consumer-smoke");
 const templateDir = path.join(smokeRoot, "template");
 const artifactsDir = path.join(smokeRoot, ".artifacts");
@@ -206,34 +208,86 @@ async function installPackedTarballs(tarballs) {
   }
 }
 
-async function installReactPeer() {
-  const sourceDir = await realpath(path.join(repoRoot, "packages", "react", "node_modules", "react"));
-  const targetDir = path.join(workspaceDir, "node_modules", "react");
+const copiedPeerPackages = new Set();
+
+async function resolvePackageJsonPath(packageName, fromDir) {
+  let searchDir = fromDir;
+
+  while (searchDir !== path.dirname(searchDir)) {
+    const candidate = path.join(searchDir, "node_modules", packageName, "package.json");
+
+    if (existsSync(candidate)) {
+      return candidate;
+    }
+
+    searchDir = path.dirname(searchDir);
+  }
+
+  try {
+    return require.resolve(`${packageName}/package.json`, { paths: [fromDir] });
+  } catch {
+    // Some packages hide package.json behind exports; resolve the entrypoint below.
+  }
+
+  const pnpmStoreDir = path.join(repoRoot, "node_modules", ".pnpm");
+  if (existsSync(pnpmStoreDir)) {
+    for (const entry of await readdir(pnpmStoreDir)) {
+      const candidate = path.join(pnpmStoreDir, entry, "node_modules", packageName, "package.json");
+
+      if (!existsSync(candidate)) {
+        continue;
+      }
+
+      const packageJson = JSON.parse(await readFile(candidate, "utf8"));
+      if (packageJson.name === packageName) {
+        return candidate;
+      }
+    }
+  }
+
+  let currentDir = path.dirname(require.resolve(packageName, { paths: [fromDir] }));
+
+  while (currentDir !== path.dirname(currentDir)) {
+    const candidate = path.join(currentDir, "package.json");
+
+    if (existsSync(candidate)) {
+      const packageJson = JSON.parse(await readFile(candidate, "utf8"));
+      if (packageJson.name === packageName) {
+        return candidate;
+      }
+    }
+
+    currentDir = path.dirname(currentDir);
+  }
+
+  throw new Error(`Unable to resolve package root for ${packageName}`);
+}
+
+async function installPeerPackage(packageName, fromDir) {
+  if (copiedPeerPackages.has(packageName)) {
+    return;
+  }
+  copiedPeerPackages.add(packageName);
+
+  const packageJsonPath = await resolvePackageJsonPath(packageName, fromDir);
+  const sourceDir = path.dirname(packageJsonPath);
+  const targetDir = path.join(workspaceDir, "node_modules", packageName);
+  const packageJson = JSON.parse(await readFile(packageJsonPath, "utf8"));
+
+  await mkdir(path.dirname(targetDir), { recursive: true });
   await cp(sourceDir, targetDir, { dereference: true, recursive: true });
+
+  for (const dependencyName of Object.keys(packageJson.dependencies ?? {})) {
+    await installPeerPackage(dependencyName, sourceDir);
+  }
+}
+
+async function installReactPeer() {
+  await installPeerPackage("react", path.join(repoRoot, "packages", "react"));
 }
 
 async function installVuePeer() {
-  const sourceDir = await realpath(path.join(repoRoot, "packages", "vue", "node_modules", "vue"));
-  const targetDir = path.join(workspaceDir, "node_modules", "vue");
-  await mkdir(targetDir, { recursive: true });
-  await cp(path.join(sourceDir, "dist"), path.join(targetDir, "dist"), { dereference: true, recursive: true });
-  await writeFile(
-    path.join(targetDir, "package.json"),
-    `${JSON.stringify(
-      {
-        name: "vue",
-        private: true,
-        type: "module",
-        exports: {
-          ".": "./index.js"
-        }
-      },
-      null,
-      2
-    )}\n`,
-    "utf8"
-  );
-  await writeFile(path.join(targetDir, "index.js"), 'export * from "./dist/vue.runtime.esm-browser.js";\n', "utf8");
+  await installPeerPackage("vue", path.join(repoRoot, "packages", "vue"));
 }
 
 async function main() {

@@ -37,8 +37,10 @@ If your product needs stable remote preview, plan for a controlled file distribu
 - `@ko1265/file-preview-kit-shared`: shared preview contracts and types
 - `@ko1265/file-preview-kit-core`: normalization, registry, service layer, and built-in plugins
 - `@ko1265/file-preview-kit-web-components`: the `file-preview` custom element
-- `@ko1265/file-preview-kit-react`: React adapter package for v2.0 framework integration
-- `@ko1265/file-preview-kit-vue`: Vue adapter package for v2.0 framework integration
+- `@ko1265/file-preview-kit-react`: in-repo React adapter candidate for v2.0 framework integration
+- `@ko1265/file-preview-kit-vue`: in-repo Vue adapter candidate for v2.0 framework integration
+
+The React and Vue adapters are not listed as published npm packages until a real adapter publish and registry verification are complete.
 
 Angular and Svelte are currently documented Web Component integration paths, not adapter packages. See [Framework Integration Notes](docs/frameworks/README.md).
 
@@ -243,7 +245,7 @@ pnpm pack:verify
 pnpm smoke:consumer
 ```
 
-`pnpm smoke:consumer` builds the publishable packages, packs local tarballs, installs them into a clean sample app, and verifies that an external consumer can import the core, Web Component, and framework adapter package surfaces.
+`pnpm smoke:consumer` builds the publishable packages, packs local tarballs, installs them into a clean sample app, and verifies that an external consumer can import the core, Web Component, and local adapter package surfaces when those adapters are in scope.
 
 ## Release notes
 

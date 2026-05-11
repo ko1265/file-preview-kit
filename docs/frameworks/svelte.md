@@ -39,36 +39,48 @@ pnpm add @ko1265/file-preview-kit-web-components @ko1265/file-preview-kit-core
     }
   });
 
-  onMount(async () => {
-    const { registerFilePreviewElement } = await import(
-      "@ko1265/file-preview-kit-web-components"
+  onMount(() => {
+    let removeListeners: (() => void) | undefined;
+    let disposed = false;
+
+    void import("@ko1265/file-preview-kit-web-components").then(
+      ({ registerFilePreviewElement }) => {
+        if (disposed) {
+          return;
+        }
+
+        registerFilePreviewElement();
+
+        preview.requestConfig = {
+          credentials: "include",
+          headers: {
+            "X-Document-Scope": "private"
+          }
+        };
+
+        preview.previewService = previewService;
+
+        const handleLoad = () => {
+          console.log("preview loaded");
+        };
+
+        const handleError = (event: Event) => {
+          console.error("preview failed", (event as CustomEvent).detail);
+        };
+
+        preview.addEventListener("file-preview:load", handleLoad);
+        preview.addEventListener("file-preview:error", handleError);
+
+        removeListeners = () => {
+          preview.removeEventListener("file-preview:load", handleLoad);
+          preview.removeEventListener("file-preview:error", handleError);
+        };
+      }
     );
 
-    registerFilePreviewElement();
-
-    preview.requestConfig = {
-      credentials: "include",
-      headers: {
-        "X-Document-Scope": "private"
-      }
-    };
-
-    preview.previewService = previewService;
-
-    const handleLoad = () => {
-      console.log("preview loaded");
-    };
-
-    const handleError = (event: Event) => {
-      console.error("preview failed", (event as CustomEvent).detail);
-    };
-
-    preview.addEventListener("file-preview:load", handleLoad);
-    preview.addEventListener("file-preview:error", handleError);
-
     return () => {
-      preview.removeEventListener("file-preview:load", handleLoad);
-      preview.removeEventListener("file-preview:error", handleError);
+      disposed = true;
+      removeListeners?.();
     };
   });
 </script>
@@ -81,6 +93,8 @@ pnpm add @ko1265/file-preview-kit-web-components @ko1265/file-preview-kit-core
 ></file-preview>
 ```
 
+The cleanup must be returned synchronously from `onMount`; do not make the `onMount` callback itself `async`.
+
 ## SvelteKit example
 
 This pattern keeps the browser-only code inside `onMount` and leaves the rest of the route SSR-safe.
@@ -92,20 +106,38 @@ This pattern keeps the browser-only code inside `onMount` and leaves the rest of
 
   let preview: HTMLElement;
 
-  onMount(async () => {
+  onMount(() => {
     if (!browser) {
       return;
     }
 
-    const { registerFilePreviewElement } = await import(
-      "@ko1265/file-preview-kit-web-components"
+    let removeListeners: (() => void) | undefined;
+    let disposed = false;
+
+    void import("@ko1265/file-preview-kit-web-components").then(
+      ({ registerFilePreviewElement }) => {
+        if (disposed) {
+          return;
+        }
+
+        registerFilePreviewElement();
+
+        const handleLoadStart = () => {
+          console.log("preview loading");
+        };
+
+        preview.addEventListener("file-preview:loadstart", handleLoadStart);
+
+        removeListeners = () => {
+          preview.removeEventListener("file-preview:loadstart", handleLoadStart);
+        };
+      }
     );
 
-    registerFilePreviewElement();
-
-    preview.addEventListener("file-preview:loadstart", () => {
-      console.log("preview loading");
-    });
+    return () => {
+      disposed = true;
+      removeListeners?.();
+    };
   });
 </script>
 
