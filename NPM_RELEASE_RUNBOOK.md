@@ -2,9 +2,11 @@
 
 Updated: 2026-05-11
 
-This is the execution runbook for the first public npm release of `file-preview-kit`.
+This is the operator runbook for the first public npm release of `file-preview-kit`.
 
-## Release Target
+Status: completed for `0.1.0`.
+
+## Historical Release Target
 
 - Version: `0.1.0`
 - Scope: `@ko1265`
@@ -94,19 +96,24 @@ Create a temporary folder and install from npm:
 mkdir $env:TEMP\file-preview-kit-registry-smoke -Force
 cd $env:TEMP\file-preview-kit-registry-smoke
 npm init -y
-pnpm add @ko1265/file-preview-kit-web-components
+pnpm add @ko1265/file-preview-kit-core @ko1265/file-preview-kit-web-components
 ```
 
-Then verify the package resolves:
+Then verify the package boundaries honestly:
 
 ```bash
-node -e "import('@ko1265/file-preview-kit-web-components').then(() => console.log('ok'))"
+node -e "import('@ko1265/file-preview-kit-core').then(({ FilePreviewService }) => { const service = new FilePreviewService(); const resolution = service.resolve({ url: 'https://consumer.example/files/readme.md' }); console.log(resolution.plugin.descriptor.id === 'markdown' ? 'ok' : 'fail'); })"
+```
+
+```bash
+node -e "const registry = new Map(); globalThis.window = { location: { href: 'https://consumer.example/app/' } }; globalThis.HTMLElement = class { attachShadow() { return { innerHTML: '', querySelector() { return null; }, replaceChildren() {} }; } }; globalThis.customElements = { define(name, ctor) { if (!registry.has(name)) registry.set(name, ctor); }, get(name) { return registry.get(name); } }; import('@ko1265/file-preview-kit-web-components').then(({ registerFilePreviewElement }) => { registerFilePreviewElement('registry-smoke-preview'); console.log(globalThis.customElements.get('registry-smoke-preview') ? 'ok' : 'fail'); })"
 ```
 
 Expected result:
 
 - install succeeds from the public registry
-- the import prints `ok`
+- the `core` import prints `ok`
+- the `web-components` registration check prints `ok`
 
 ## If Something Fails
 
@@ -117,5 +124,6 @@ Expected result:
 ## Notes
 
 - The root workspace package stays private and is not part of the npm release surface.
-- This runbook is for the first public `0.1.0` release only.
+- This runbook was used for the first public `0.1.0` release and now remains as a historical or replay reference.
 - Keep `NPM_PUBLISH_CHECKLIST.md` as the higher-level readiness document; use this file for the actual execution sequence.
+- The repository currently carries a local `1.0.0` baseline, but a future public `1.0.0` package publish should still be treated as a separate operator action.

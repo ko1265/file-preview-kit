@@ -248,6 +248,43 @@ describe("FilePreviewElement", () => {
     expect(element.shadowRoot.textContent).not.toContain("AbortError");
   });
 
+  it("aborts an in-flight render when src is cleared", async () => {
+    let aborted = false;
+    const element = document.createElement(testTag) as HTMLElement & {
+      previewService: { render: (source: { url: string }, signal?: AbortSignal) => Promise<HTMLElement> };
+      removeAttribute(name: string): void;
+      setAttribute(name: string, value: string): void;
+      shadowRoot: ShadowRoot;
+    };
+
+    element.previewService = {
+      async render(_source, signal) {
+        await new Promise((resolve, reject) => {
+          signal?.addEventListener("abort", () => {
+            aborted = true;
+            reject(new DOMException("Aborted", "AbortError"));
+          });
+        });
+
+        const node = document.createElement("div");
+        node.textContent = "Should not render";
+        return node;
+      }
+    };
+
+    document.body.append(element);
+    element.setAttribute("src", "https://example.com/report.pdf");
+    await Promise.resolve();
+    element.removeAttribute("src");
+
+    await vi.waitFor(() => {
+      expect(aborted).toBe(true);
+      expect(element.shadowRoot.querySelector(".viewport")?.textContent).toContain(
+        "Set the src attribute to start previewing a file."
+      );
+    });
+  });
+
   it("emits load lifecycle events for successful previews", async () => {
     const events: Array<{ type: string; detail: unknown }> = [];
     const element = document.createElement(testTag) as HTMLElement & {
@@ -290,6 +327,39 @@ describe("FilePreviewElement", () => {
         url: "https://example.com/guide.md"
       }
     });
+  });
+
+  it("lets parent containers observe bubbling lifecycle events", async () => {
+    const container = document.createElement("div");
+    const events: string[] = [];
+    const element = document.createElement(testTag) as HTMLElement & {
+      previewService: { render: () => Promise<HTMLElement> };
+      setAttribute(name: string, value: string): void;
+    };
+
+    element.previewService = {
+      async render() {
+        const node = document.createElement("div");
+        node.textContent = "Loaded preview";
+        return node;
+      }
+    };
+
+    container.addEventListener("file-preview:loadstart", () => {
+      events.push("file-preview:loadstart");
+    });
+    container.addEventListener("file-preview:load", () => {
+      events.push("file-preview:load");
+    });
+
+    container.append(element);
+    document.body.append(container);
+    element.setAttribute("src", "https://example.com/guide.md");
+
+    await Promise.resolve();
+    await Promise.resolve();
+
+    expect(events).toEqual(["file-preview:loadstart", "file-preview:load"]);
   });
 
   it("suppresses stale completion events when src changes mid-render", async () => {
@@ -385,6 +455,43 @@ describe("FilePreviewElement", () => {
       message: "Boom"
     });
     expect(element.shadowRoot?.textContent).toContain("Boom");
+  });
+
+  it("surfaces a clear error when the headers attribute is not valid JSON", async () => {
+    const element = document.createElement(testTag) as HTMLElement & {
+      previewService: { render: () => Promise<HTMLElement> };
+      setAttribute(name: string, value: string): void;
+      shadowRoot: ShadowRoot;
+    };
+    const captured: Array<CustomEvent> = [];
+    let renderCalled = false;
+
+    element.previewService = {
+      async render() {
+        renderCalled = true;
+        const node = document.createElement("div");
+        return node;
+      }
+    };
+
+    element.addEventListener("file-preview:error", (event) => {
+      captured.push(event as CustomEvent);
+    });
+
+    document.body.append(element);
+    element.setAttribute("headers", '{"X-Test":');
+    element.setAttribute("src", "https://example.com/failure.txt");
+
+    await Promise.resolve();
+    await Promise.resolve();
+
+    expect(renderCalled).toBe(false);
+    expect(captured).toHaveLength(1);
+    expect(captured[0]?.detail).toMatchObject({
+      source: null,
+      message: "Invalid headers attribute JSON"
+    });
+    expect(element.shadowRoot?.textContent).toContain("Invalid headers attribute JSON");
   });
 
   it("suppresses stale error events when src changes before a failure resolves", async () => {

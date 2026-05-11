@@ -1,8 +1,8 @@
 # Public Launch Assets
 
-Updated: 2026-05-09
+Updated: 2026-05-11
 
-This page keeps the screenshot-level public launch material aligned with the `v1.0-prep` story.
+This page keeps the screenshot-level public launch material aligned with the stable `v1.0` story.
 
 ## Primary Asset
 

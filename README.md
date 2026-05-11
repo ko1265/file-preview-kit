@@ -2,7 +2,7 @@
 
 [English](#file-preview-kit) | [中文](README.zh.md)
 
-`file-preview-kit` is a pure-frontend TypeScript monorepo for remote file preview using Web Components. It is built around browser-only rendering, clean package boundaries, and a plugin-driven architecture that is being hardened toward a practical `v1.0-prep` release.
+`file-preview-kit` is a pure-frontend TypeScript monorepo for remote file preview using Web Components. It is built around browser-only rendering, clean package boundaries, and a plugin-driven architecture that now serves as the project's `v1.0` stability baseline.
 
 ## Important: remote file access requirements
 
@@ -51,6 +51,13 @@ For the service and plugin registry directly:
 ```bash
 pnpm add @ko1265/file-preview-kit-core
 ```
+
+## Browser-only note
+
+`@ko1265/file-preview-kit-web-components` is a browser-only / client-only package.
+
+- Do not execute it on a pure Node.js path
+- In SSR frameworks such as Next.js or Nuxt, keep it behind a clear client boundary
 
 ## Previewers
 
@@ -111,6 +118,8 @@ document.body.append(preview);
 Preview fetches can be configured at both the service and element levels.
 
 Element attributes are useful for simple HTML embedding:
+
+HTML embedding still requires a one-time `registerFilePreviewElement()` during app bootstrap. Writing a `<file-preview>` tag alone is not enough if the custom element has not been registered yet.
 
 ```html
 <file-preview
@@ -196,6 +205,22 @@ preview.requestConfig = {
 - `authToken` only injects an `Authorization` header for fetch-based previews. If you already set `Authorization` in `headers`, that explicit header wins.
 - The custom element emits `file-preview:loadstart`, `file-preview:load`, and `file-preview:error` on the element itself so host apps can reflect loading state or surface failures.
 
+Minimal event example:
+
+```ts
+preview.addEventListener("file-preview:loadstart", () => {
+  console.log("preview loading");
+});
+
+preview.addEventListener("file-preview:load", () => {
+  console.log("preview loaded");
+});
+
+preview.addEventListener("file-preview:error", (event) => {
+  console.error("preview failed", (event as CustomEvent).detail);
+});
+```
+
 ## Office preview scope
 
 - `docx`, `xlsx`, and `pptx` are readable browser previews, not fidelity-preserving Office renderers.
@@ -218,6 +243,8 @@ pnpm smoke:consumer
 
 ## Release notes
 
+- The first public npm release landed as `0.1.0`.
+- The current repository state is the project's `v1.0` engineering and documentation baseline.
 - The published packages are `@ko1265/file-preview-kit-shared`, `@ko1265/file-preview-kit-core`, and `@ko1265/file-preview-kit-web-components`.
 - Package metadata now includes repository, bugs, and homepage links.
 - Tarball generation is verified with `pnpm pack:verify`.
@@ -232,14 +259,3 @@ pnpm smoke:consumer
 
 - English: this file
 - Chinese: [README.zh.md](README.zh.md)
-
-## Notes
-
-- Remote preview still depends on browser CORS rules
-- Remote file sources must be browser-readable, not just public in a separate tab
-- Deploying the host app on `https` does not remove cross-origin fetch restrictions by itself
-- The most reliable production setup is same-origin files, object storage/CDN with correct CORS, or a backend proxy
-- Browser credentials and headers cannot force access to cross-origin URLs that do not allow the request
-- PDF support includes a larger optional `pdf.js` worker asset
-- Office previews favor readable extracted content over layout-faithful reproduction
-- Public demo URLs are intentionally lightweight and may change over time

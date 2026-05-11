@@ -20,13 +20,17 @@ The product direction is readable preview first, not Office layout fidelity.
 
 ## Current Stage
 
-The project has completed the main `v0.1` to `v0.3` implementation and hardening work.
-The active roadmap is now in `v1.0-prep`, focused on:
+The project has completed its `v1.0` closeout for the current product scope.
 
-- roadmap / next-step clarity
-- demo and public-facing examples
-- release-readiness checks
-- public demo / launch-note style presentation
+The stable promise is now:
+
+- browser-only preview
+- clear package boundaries
+- explicit request-shaping support
+- extraction-oriented Office previews
+- conservative maintenance instead of broad feature expansion
+
+The first public npm release is already live as `0.1.0`. The repository itself remains in a maintenance-oriented post-closeout state until any future operator-led public GitHub opening or follow-up package release.
 
 ## Agent Roles
 
@@ -36,9 +40,9 @@ The active roadmap is now in `v1.0-prep`, focused on:
 
 ## Current Priorities
 
-1. Finish `v1.0-prep` release-facing artifacts.
-2. Improve demo/public presentation rather than expanding more Office scope.
-3. Keep `pptx` low priority.
+1. Preserve the `v1.0` baseline across code, docs, and demo behavior.
+2. Improve real consumer ergonomics when issues are low-risk and well-scoped.
+3. Avoid over-investing in new preview scope before a clear product decision.
 
 ## Known Constraints
 
@@ -57,10 +61,11 @@ When resuming work:
 4. Read `PUBLIC_DEMO_NOTE.md`
 5. Read `README.md`
 6. Check current `git status`
-7. Continue according to the roadmap order unless the user explicitly reprioritizes
+7. Continue according to the stable maintenance priorities unless the user explicitly reprioritizes
 
 ## Notes On Status Files
 
-- `AGENT_STATUS.md` is a transient handoff file for agent-to-agent continuation.
-- `STATUS.md` is a transient project heartbeat/log.
-- Both are intentionally treated as working notes rather than stable repository docs.
+- `AGENT_STATUS.md` is the long-running agent-facing board used in this workspace.
+- `STATUS.md` is the project-facing heartbeat board used in this workspace.
+- `KANBAN.md` is the compact right-side task/progress board shown in the app.
+- `AGENT_HANDOFF.md` remains a handoff note rather than the canonical long-term board.

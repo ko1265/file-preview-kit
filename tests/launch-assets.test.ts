@@ -16,7 +16,7 @@ describe("public launch assets", () => {
   it("keeps the launch card text aligned with the public demo story", async () => {
     const svg = await readFile(resolve("LAUNCH_ASSET.svg"), "utf-8");
 
-    expect(svg).toContain("file-preview-kit v1.0-prep launch card");
+    expect(svg).toContain("file-preview-kit v1.0 launch card");
     expect(svg).toContain("Browser-only remote file preview");
     expect(svg).toContain("public URL, auth-shaped request handling");
     expect(svg).toContain("Office extracts");

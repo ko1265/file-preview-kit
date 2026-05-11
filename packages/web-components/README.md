@@ -14,6 +14,13 @@ Standalone Web Components wrapper for `file-preview-kit`.
 pnpm add @ko1265/file-preview-kit-web-components
 ```
 
+## Browser-only note
+
+This package is browser-only / client-only.
+
+- Do not execute it on a pure Node.js path
+- In SSR frameworks such as Next.js or Nuxt, keep it behind a clear client boundary
+
 ## Usage
 
 ```ts
@@ -27,6 +34,8 @@ document.body.append(preview);
 ```
 
 For simple HTML embedding:
+
+HTML embedding still requires a one-time `registerFilePreviewElement()` during app bootstrap. A `<file-preview>` tag alone is not enough until the custom element has been registered.
 
 ```html
 <file-preview
@@ -45,3 +54,19 @@ For simple HTML embedding:
 - Attribute-based configuration is useful for simple HTML usage, but the property API is the more complete integration surface.
 - Request headers and auth settings only affect fetch-based previewers, not native media elements.
 - The custom element emits `file-preview:loadstart`, `file-preview:load`, and `file-preview:error` events so host apps can track loading state or surface failures.
+
+Minimal event example:
+
+```ts
+preview.addEventListener("file-preview:loadstart", () => {
+  console.log("preview loading");
+});
+
+preview.addEventListener("file-preview:load", () => {
+  console.log("preview loaded");
+});
+
+preview.addEventListener("file-preview:error", (event) => {
+  console.error("preview failed", (event as CustomEvent).detail);
+});
+```

@@ -8,9 +8,10 @@ describe("release checklist", () => {
 
     expect(checklist).toContain("pnpm build");
     expect(checklist).toContain("pnpm test");
-    expect(checklist).toContain("pnpm pack:check");
+    expect(checklist).toContain("pnpm pack:verify");
+    expect(checklist).toContain("pnpm smoke:consumer");
     expect(checklist).toContain("PUBLIC_DEMO_NOTE.md");
-    expect(checklist).toContain("no new Office sample breadth was added in this prep pass");
+    expect(checklist).toContain("no new Office sample breadth was added beyond the current extraction-oriented scope");
     expect(checklist).toContain("browser-only preview story");
   });
 });

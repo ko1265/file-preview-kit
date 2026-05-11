@@ -7,7 +7,7 @@ describe("release readiness", () => {
     const readiness = await readFile(resolve("RELEASE_READINESS.md"), "utf-8");
 
     expect(readiness).toContain("Public demo framing is covered in the README, launch note, and launch assets.");
-    expect(readiness).toContain("Live browser screenshot verification is partially available in this environment:");
-    expect(readiness).toContain("No new Office sample breadth should be added in this prep pass.");
+    expect(readiness).toContain("The repository now treats its current API, package boundaries, and browser-only expectations as the `v1.0` baseline.");
+    expect(readiness).toContain("The public npm packages remain on `0.1.0` until a future versioned follow-up is published.");
   });
 });

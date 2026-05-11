@@ -1,6 +1,6 @@
 {
   "name": "@ko1265/file-preview-kit-shared",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Shared preview contracts for file-preview-kit.",
   "license": "MIT",
   "repository": {

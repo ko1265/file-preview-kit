@@ -1,6 +1,6 @@
 {
   "name": "file-preview-kit",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "description": "Pure frontend TypeScript monorepo for remote URL file preview via Web Components.",
   "license": "MIT",

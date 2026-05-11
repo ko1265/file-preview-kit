@@ -50,7 +50,7 @@ export class FilePreviewElement extends HTMLElement {
 
   private readonly root: ShadowRoot;
   private service: FilePreviewService;
-  private abortController?: AbortController;
+  private abortController: AbortController | undefined;
   private explicitRequestConfig: FilePreviewRequestConfig | undefined;
   private refreshVersion = 0;
 
@@ -179,8 +179,19 @@ export class FilePreviewElement extends HTMLElement {
       return undefined;
     }
 
-    const parsed = JSON.parse(raw) as Record<string, string>;
-    return parsed;
+    let parsed: unknown;
+
+    try {
+      parsed = JSON.parse(raw);
+    } catch {
+      throw new Error("Invalid headers attribute JSON");
+    }
+
+    if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) {
+      throw new Error("Invalid headers attribute JSON");
+    }
+
+    return parsed as Record<string, string>;
   }
 
   private parseWorkbookAttributes(): FilePreviewOfficeRequestConfig | undefined {
@@ -247,6 +258,7 @@ export class FilePreviewElement extends HTMLElement {
   private dispatchLoadStart(source: FileSource): void {
     this.dispatchEvent(
       new CustomEvent<FilePreviewLoadStartDetail>("file-preview:loadstart", {
+        bubbles: true,
         detail: { source }
       })
     );
@@ -255,6 +267,7 @@ export class FilePreviewElement extends HTMLElement {
   private dispatchLoad(source: FileSource): void {
     this.dispatchEvent(
       new CustomEvent<FilePreviewLoadDetail>("file-preview:load", {
+        bubbles: true,
         detail: { source }
       })
     );
@@ -263,6 +276,7 @@ export class FilePreviewElement extends HTMLElement {
   private dispatchError(source: FileSource | null, error: unknown, message: string): void {
     this.dispatchEvent(
       new CustomEvent<FilePreviewErrorDetail>("file-preview:error", {
+        bubbles: true,
         detail: {
           source,
           message,
@@ -274,16 +288,19 @@ export class FilePreviewElement extends HTMLElement {
 
   async refresh(): Promise<void> {
     const refreshVersion = ++this.refreshVersion;
+    let source: FileSource | null = null;
 
     try {
-      const source = this.source;
+      this.abortController?.abort();
+      this.abortController = undefined;
+
+      source = this.source;
       if (!source) {
         this.setFileName("Waiting for source");
         this.setViewport(this.createState("empty", "Set the src attribute to start previewing a file."));
         return;
       }
 
-      this.abortController?.abort();
       this.abortController = new AbortController();
       const currentController = this.abortController;
       this.setFileName(
@@ -309,7 +326,7 @@ export class FilePreviewElement extends HTMLElement {
 
       const message = error instanceof Error ? error.message : "Unknown preview error";
       this.setViewport(this.createState("error", message));
-      this.dispatchError(this.source, error, message);
+      this.dispatchError(source, error, message);
     }
   }
 

@@ -1,8 +1,8 @@
-# file-preview-kit v1.0-prep Public Demo Note
+# file-preview-kit Public Demo Note
 
-Updated: 2026-05-09
+Updated: 2026-05-11
 
-`file-preview-kit` is a browser-only TypeScript preview toolkit for remote files. This pre-release pass keeps the scope intentionally narrow: the goal is to make the demo, package docs, and public messaging feel release-ready without drifting into server conversion or Office fidelity work. No server-side conversion is involved.
+`file-preview-kit` is a browser-only TypeScript preview toolkit for remote files. The demo now represents the stable `v1.0` product story: readable client-side previews, explicit browser-fetch constraints, and conservative Office support without drifting into server conversion or layout fidelity work.
 
 The remote examples assume browser-readable file sources. Public endpoint availability is not guaranteed, and deploying the host app on `https` does not remove cross-origin restrictions by itself.
 
@@ -10,11 +10,10 @@ The remote examples assume browser-readable file sources. Public endpoint availa
 
 - A remote README preview in the demo.
 - Auth-shaped request handling using `requestConfig`.
-- readable Office extracts for `docx`, `xlsx`, and `pptx`.
-- native media previews for image, audio, and video.
+- Readable Office extracts for `docx`, `xlsx`, and `pptx`.
+- Native media previews for image, audio, and video.
 
-The Office screenshot scenes use local static demo files so the release capture stays stable.
-If the release visual needs a refresh, use `LAUNCH_ASSET.svg` together with `SCREENSHOT_CHECKLIST.md` and its manual fallback path.
+The Office screenshot scenes use local static demo files so the release capture stays stable. If the release visual needs a refresh, use `LAUNCH_ASSET.svg` together with `SCREENSHOT_CHECKLIST.md` and its manual fallback path.
 
 ## Public Message
 
@@ -35,14 +34,10 @@ If the release visual needs a refresh, use `LAUNCH_ASSET.svg` together with `SCR
 
 The screenshot-level release visual is [LAUNCH_ASSET.svg](LAUNCH_ASSET.svg). It matches the caption above and is meant to stay in sync with the README release framing.
 
-## Release Framing
+## Stable Framing
 
 - Public remote samples are there to demonstrate the preview flow, not to guarantee long-term endpoint stability.
 - Public remote samples must still be browser-readable and CORS-compatible.
 - Auth behavior is shown as request-shaping guidance.
 - Office previews are extraction-oriented browser previews, not fidelity renderers.
 - The screenshot path for Office uses local static demo files so it does not depend on remote fetch success.
-
-## Short Launch Copy
-
-`file-preview-kit` is moving through `v1.0-prep` with a tighter public demo, clearer request-auth guidance, and a more explicit release story. The previewer stays browser-only, Web Components-first, and focused on readable extracts for remote files, with `LAUNCH_ASSET.svg`, `SCREENSHOT_CHECKLIST.md`, and manual fallback as the final release path.

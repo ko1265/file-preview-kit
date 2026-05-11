@@ -10,7 +10,7 @@ describe("public launch assets", () => {
     expect(assets).toContain("screenshot-level public launch material");
     expect(assets).toContain("LAUNCH_ASSET.svg");
     expect(assets).toContain("SCREENSHOT_CHECKLIST.md");
-    expect(svg).toContain("file-preview-kit v1.0-prep launch card");
+    expect(svg).toContain("file-preview-kit v1.0 launch card");
     expect(svg).toContain("Remote file preview with Web Components");
     expect(svg).toContain("Release framing");
     expect(svg).toContain("Browser-only");

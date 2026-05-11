@@ -1,5 +1,5 @@
 <svg width="1600" height="900" viewBox="0 0 1600 900" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
-  <title id="title">file-preview-kit v1.0-prep launch card</title>
+  <title id="title">file-preview-kit v1.0 launch card</title>
   <desc id="desc">A screenshot-style release card showing public URL, auth-shaped request handling, Office extracts, and media previews.</desc>
   <defs>
     <linearGradient id="bg" x1="160" y1="0" x2="1440" y2="900" gradientUnits="userSpaceOnUse">
@@ -71,4 +71,3 @@
     <text x="205" y="762" class="mono" fill="#FFFFFF">A compact browser-only preview demo covering public URL, auth-shaped request handling, Office extracts, and media previews.</text>
   </g>
 </svg>
-

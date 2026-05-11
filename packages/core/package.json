@@ -1,6 +1,6 @@
 {
   "name": "@ko1265/file-preview-kit-core",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Core preview registry and built-in plugins for file-preview-kit.",
   "license": "MIT",
   "repository": {
