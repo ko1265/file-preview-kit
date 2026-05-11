@@ -1,0 +1,48 @@
+{
+  "name": "@ko1265/file-preview-kit-react",
+  "version": "1.0.0",
+  "description": "React adapter for file-preview-kit.",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ko1265/file-preview-kit.git",
+    "directory": "packages/react"
+  },
+  "bugs": {
+    "url": "https://github.com/ko1265/file-preview-kit/issues"
+  },
+  "homepage": "https://github.com/ko1265/file-preview-kit/tree/main/packages/react",
+  "type": "module",
+  "sideEffects": false,
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": ["dist", "README.md"],
+  "dependencies": {
+    "@ko1265/file-preview-kit-core": "workspace:*",
+    "@ko1265/file-preview-kit-shared": "workspace:*",
+    "@ko1265/file-preview-kit-web-components": "workspace:*"
+  },
+  "peerDependencies": {
+    "react": ">=18.2.0 <20"
+  },
+  "devDependencies": {
+    "@types/react": "^19.0.0",
+    "react": "^19.0.0"
+  },
+  "keywords": ["file-preview", "react", "web-components", "frontend"],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsc -b && node ../../scripts/fix-relative-esm-extensions.mjs dist",
+    "clean": "node -e \"Promise.all([import('node:fs/promises').then(({ rm }) => rm('dist', { recursive: true, force: true })), import('node:fs/promises').then(({ rm }) => rm('tsconfig.tsbuildinfo', { force: true }))]).catch(() => {})\"",
+    "lint": "tsc --noEmit"
+  }
+}

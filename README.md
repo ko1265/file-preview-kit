@@ -239,7 +239,7 @@ pnpm pack:verify
 pnpm smoke:consumer
 ```
 
-`pnpm smoke:consumer` builds the publishable packages, packs local tarballs, installs them into a clean sample app, and verifies that an external consumer can import `@ko1265/file-preview-kit-core` and `@ko1265/file-preview-kit-web-components`.
+`pnpm smoke:consumer` builds the publishable packages, packs local tarballs, installs them into a clean sample app, and verifies that an external consumer can import the core, Web Component, and React adapter package surfaces.
 
 ## Release notes
 

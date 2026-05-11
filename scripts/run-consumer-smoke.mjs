@@ -30,6 +30,10 @@ const publishablePackages = [
   {
     name: "@ko1265/file-preview-kit-web-components",
     dir: path.join(repoRoot, "packages", "web-components")
+  },
+  {
+    name: "@ko1265/file-preview-kit-react",
+    dir: path.join(repoRoot, "packages", "react")
   }
 ];
 
@@ -87,12 +91,14 @@ async function buildPublishablePackages() {
       "-b",
       "packages/shared/tsconfig.json",
       "packages/core/tsconfig.json",
-      "packages/web-components/tsconfig.json"
+      "packages/web-components/tsconfig.json",
+      "packages/react/tsconfig.json"
     ],
     repoRoot
   );
   await run("node", ["./scripts/fix-relative-esm-extensions.mjs", "packages/core/dist"], repoRoot);
   await run("node", ["./scripts/fix-relative-esm-extensions.mjs", "packages/web-components/dist"], repoRoot);
+  await run("node", ["./scripts/fix-relative-esm-extensions.mjs", "packages/react/dist"], repoRoot);
 }
 
 function normalizeForPackageJson(value) {
@@ -178,6 +184,27 @@ async function installPackedTarballs(tarballs) {
   }
 }
 
+async function installReactPeerShim() {
+  const reactDir = path.join(workspaceDir, "node_modules", "react");
+  await mkdir(reactDir, { recursive: true });
+  await writeFile(
+    path.join(reactDir, "package.json"),
+    `${JSON.stringify({ name: "react", version: "19.0.0", type: "module", exports: "./index.js" }, null, 2)}\n`,
+    "utf8"
+  );
+  await writeFile(
+    path.join(reactDir, "index.js"),
+    [
+      "export function createElement(type, props) { return { type, props }; }",
+      "export function forwardRef(render) { render.displayName = render.displayName ?? render.name; return render; }",
+      "export function useEffect() {}",
+      "export function useImperativeHandle() {}",
+      "export function useRef(value) { return { current: value }; }"
+    ].join("\n"),
+    "utf8"
+  );
+}
+
 async function main() {
   console.log("==> Building publishable packages");
   await buildPublishablePackages();
@@ -201,6 +228,7 @@ async function main() {
 
   console.log("==> Materializing packed tarballs into clean consumer app");
   await installPackedTarballs(tarballs);
+  await installReactPeerShim();
 
   console.log("==> Verifying consumer imports and minimal usage");
   await run("node", ["./verify-consumer.mjs"], workspaceDir);

@@ -2,12 +2,6 @@ import assert from "node:assert/strict";
 
 const elementRegistry = new Map();
 
-globalThis.window = {
-  location: {
-    href: "https://consumer.example/app/"
-  }
-};
-
 globalThis.HTMLElement = class HTMLElement {
   attachShadow() {
     return {
@@ -31,11 +25,19 @@ globalThis.customElements = {
   }
 };
 
+globalThis.window = {
+  customElements: globalThis.customElements,
+  location: {
+    href: "https://consumer.example/app/"
+  }
+};
+
 const sharedModule = await import("@ko1265/file-preview-kit-shared");
 assert.ok(sharedModule, "shared package should import successfully");
 
 const { FilePreviewService } = await import("@ko1265/file-preview-kit-core");
 const { FilePreviewElement, registerFilePreviewElement } = await import("@ko1265/file-preview-kit-web-components");
+const { FilePreview, ensureFilePreviewElementRegistered } = await import("@ko1265/file-preview-kit-react");
 
 const service = new FilePreviewService();
 const resolution = service.resolve({
@@ -59,5 +61,24 @@ assert.equal(
   FilePreviewElement,
   "consumer app should be able to register the custom element"
 );
+
+await ensureFilePreviewElementRegistered();
+assert.equal(
+  globalThis.customElements.get("file-preview"),
+  FilePreviewElement,
+  "React adapter should register the default custom element"
+);
+
+const reactElement = FilePreview({
+  src: "https://consumer.example/files/readme.md",
+  fileName: "readme.md",
+  requestConfig: {
+    headers: {
+      "X-Smoke": "react"
+    }
+  },
+  onLoad() {}
+});
+assert.equal(reactElement.type, "file-preview", "React adapter should render the file-preview custom element");
 
 console.log("consumer smoke verified");

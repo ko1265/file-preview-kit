@@ -28,6 +28,16 @@ const packages = [
       "@ko1265/file-preview-kit-core": version,
       "@ko1265/file-preview-kit-shared": version
     }
+  },
+  {
+    name: "@ko1265/file-preview-kit-react",
+    dir: "packages/react",
+    tarball: `ko1265-file-preview-kit-react-${version}.tgz`,
+    internalDependencies: {
+      "@ko1265/file-preview-kit-core": version,
+      "@ko1265/file-preview-kit-shared": version,
+      "@ko1265/file-preview-kit-web-components": version
+    }
   }
 ];
 

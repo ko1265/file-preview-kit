@@ -4,18 +4,19 @@ Updated: 2026-05-11
 
 ## Immediate Queue
 
-1. Keep post-release docs synchronized with the stable `v1.0` project story.
-2. Watch for real consumer feedback after the `0.1.0` npm release.
-3. Prefer small integration and documentation fixes over new preview surface area.
-4. Treat `LAUNCH_ASSET.svg` plus the manual screenshot fallback path as the stable public-facing visual package.
-5. Use [NPM_PUBLISH_CHECKLIST.md](NPM_PUBLISH_CHECKLIST.md) as the historical first-release record and [NPM_RELEASE_RUNBOOK.md](NPM_RELEASE_RUNBOOK.md) as the replayable operator runbook.
+1. Keep v2.0 work on `v2-framework-adapters`.
+2. Use [V2_DEVELOPMENT_PLAN.md](V2_DEVELOPMENT_PLAN.md) as the v2.0 implementation plan.
+3. Use [KANBAN.md](KANBAN.md) as the compact working board.
+4. Start with the React adapter package and prove the adapter boundary before adding Vue.
+5. Keep Angular and Svelte as documented integration paths until full package value is proven.
 
 ## Decision Points
 
-- If a real consumer reports confusion around package names or browser-only boundaries, fix docs first and code second.
-- If the auth demo proves fragile in some public networks, keep it as a request-shaping example and avoid over-promising endpoint stability.
-- If future maintenance starts growing beyond targeted fixes, pause and explicitly re-scope the roadmap instead of silently expanding `v1.0`.
+- If a framework adapter starts duplicating preview rendering logic, stop and move the logic back to `core` or `web-components`.
+- If React exposes missing Web Component ergonomics, fix the shared Web Component surface before copying workarounds into every adapter.
+- If Vue does not add enough value beyond direct Web Component usage, keep it thin and documentation-heavy.
+- If Angular or Svelte users need more than docs/smoke examples, promote that framework to a package milestone.
 
 ## Checkpoint
 
-The current stage boundary is: the project has reached its `v1.0` engineering and documentation baseline, the first public npm release is already live as `0.1.0`, and the next work should be maintenance-oriented rather than release-prep-oriented.
+The current stage boundary is: `v1.0` remains the stable browser-only preview baseline, and `v2.0` adds framework-friendly integration without expanding preview scope.

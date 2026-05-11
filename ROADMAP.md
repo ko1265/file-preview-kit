@@ -4,9 +4,9 @@ Updated: 2026-05-11
 
 ## Current Phase
 
-`v1.0`
+`v2.0 planning`
 
-The project has completed its `v1.0` closeout for the current browser-only preview scope. The focus now shifts from release prep to stable maintenance: preserving the current package boundaries, keeping consumer docs honest, and making only targeted follow-up fixes.
+The project has completed its `v1.0` closeout for the current browser-only preview scope. The next product direction is `v2.0` framework friendliness: provide thin adapters for common frontend frameworks while preserving the existing browser-only preview engine and Web Component foundation.
 
 ## Stable Promise
 
@@ -16,20 +16,32 @@ The project has completed its `v1.0` closeout for the current browser-only previ
 - Preserve the lightweight media and text preview paths that already work well.
 - Keep package READMEs, roadmap docs, and release notes aligned with the actual published package story.
 
-## Maintenance Workstreams
+## v2.0 Workstreams
 
-1. Consumer experience
-   - Watch for real integration friction around package naming, browser-only expectations, and request configuration.
-   - Prefer small ergonomics fixes and documentation improvements over capability expansion.
-2. Demo and docs upkeep
-   - Keep the demo representative of public URL, auth, Office, and media flows.
-   - Keep English and Chinese READMEs synchronized with the same stable product story.
-3. Release hygiene
-   - Keep build, test, tarball verification, and consumer smoke paths green.
-   - Preserve the current package entrypoints and browser compatibility expectations.
-4. Scoped iteration
-   - Use future releases for targeted fixes, fixture refreshes, and documentation quality.
-   - Avoid broadening the Office or server-side story without a new product decision.
+1. Framework package boundaries
+   - Ship framework adapters as separate npm packages, not one all-framework bundle.
+   - Keep each adapter thin and dependent on the shared `core` / `web-components` baseline.
+2. React adapter first
+   - Add a typed React wrapper that handles registration, object properties, custom events, and client-only guidance.
+   - Avoid reimplementing preview rendering in React.
+3. Vue adapter second
+   - Add a thin Vue wrapper only after React establishes the adapter boundary.
+   - Focus on props, emits, typing, and avoiding custom-element boilerplate.
+4. Angular and Svelte integration paths
+   - Start with docs and consumer smoke examples.
+   - Defer full packages until real demand or integration friction justifies the maintenance cost.
+5. Release hygiene
+   - Keep build, test, tarball verification, and consumer smoke paths green for every publishable package.
+   - Keep English and Chinese docs synchronized with the actual package story.
+
+## v2.0 Package Direction
+
+- `@ko1265/file-preview-kit-react`: first full adapter package.
+- `@ko1265/file-preview-kit-vue`: second adapter package after React.
+- `@ko1265/file-preview-kit-angular`: deferred until docs/smoke examples prove package value.
+- `@ko1265/file-preview-kit-svelte`: deferred until docs/smoke examples prove package value.
+
+See [V2_DEVELOPMENT_PLAN.md](V2_DEVELOPMENT_PLAN.md) and [KANBAN.md](KANBAN.md) for the active task plan.
 
 ## Exit Criteria Already Met
 
@@ -45,3 +57,4 @@ The project has completed its `v1.0` closeout for the current browser-only previ
 - Editing workflows.
 - Layout-faithful Office rendering.
 - Expanding into legacy `doc`, `xls`, or `ppt` support.
+- Rewriting the preview engine separately for each framework.

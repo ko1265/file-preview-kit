@@ -2,15 +2,20 @@
 
 Updated: 2026-05-11
 
-This checklist tracks the first public npm release work for `file-preview-kit`, the resulting historical record, and the guardrails that should still apply before any future public `1.0.0` publish.
+This checklist tracks the first public npm release work for `file-preview-kit`, the resulting historical record, and the guardrails that should still apply before any future public `1.0.0` or v2 adapter publish.
 
 For the actual first-release command sequence, use [NPM_RELEASE_RUNBOOK.md](NPM_RELEASE_RUNBOOK.md).
 
-## Target Packages
+## Published Baseline Packages
 
 - `@ko1265/file-preview-kit-shared`
 - `@ko1265/file-preview-kit-core`
 - `@ko1265/file-preview-kit-web-components`
+
+## Current v2.0 Release Candidate
+
+- `@ko1265/file-preview-kit-react`
+- Status: validated in-repo for release readiness, but not yet recorded here as a public npm publish.
 
 ## Already Verified
 
@@ -24,20 +29,22 @@ For the actual first-release command sequence, use [NPM_RELEASE_RUNBOOK.md](NPM_
   - `exports`
   - `types`
   - `publishConfig.access = public`
-- `pnpm pack:check` succeeds for all publishable packages.
+- `pnpm pack:check` succeeds for all publishable packages, including `@ko1265/file-preview-kit-react`.
 - Packed tarballs rewrite internal workspace dependencies correctly:
   - `@ko1265/file-preview-kit-core` depends on `@ko1265/file-preview-kit-shared` at the current workspace version
   - `@ko1265/file-preview-kit-web-components` depends on `@ko1265/file-preview-kit-core` and `@ko1265/file-preview-kit-shared` at the current workspace version
+  - `@ko1265/file-preview-kit-react` depends on `@ko1265/file-preview-kit-core`, `@ko1265/file-preview-kit-shared`, and `@ko1265/file-preview-kit-web-components` at the current workspace version
 - The published packages are intentionally scoped as `@ko1265/*`; the root workspace package stays private and is not part of the npm release surface.
 - Package-level READMEs now include the remote file access/CORS guidance that matters for real adopters.
 - The repository now includes a repeatable consumer smoke test at `pnpm smoke:consumer` that:
   - packs the local publishable packages
   - installs those tarballs into a clean sample app
-  - verifies that a consumer can import `@ko1265/file-preview-kit-core` and `@ko1265/file-preview-kit-web-components`
+  - verifies that a consumer can import `@ko1265/file-preview-kit-core`, `@ko1265/file-preview-kit-web-components`, and `@ko1265/file-preview-kit-react`
 - `pnpm pack:verify` now checks the packed tarballs for:
   - expected entrypoint files from `main` / `module` / `types` / `exports`
   - `README.md` and `LICENSE`
   - internal workspace dependency rewrite to the publish version
+  - React adapter tarball coverage when `@ko1265/file-preview-kit-react` is in scope for release
 
 ## First Release Outcome
 
@@ -77,12 +84,20 @@ For the actual first-release command sequence, use [NPM_RELEASE_RUNBOOK.md](NPM_
 1. If the GitHub repository is still private, do not publish a public `1.0.0` package set that points users at inaccessible repository, bug, or homepage URLs.
 2. Keep the browser-only boundary honest in all operator checks. A pure Node import of `@ko1265/file-preview-kit-web-components` is not by itself a valid success criterion without a minimal browser-like stub.
 3. Treat the repository's local `1.0.0` version as the engineering baseline until a human operator chooses to publish that version externally.
+4. If a future v2.0 release adds `@ko1265/file-preview-kit-react`, publish it after `web-components` and keep its release signoff tied to:
+   - `pnpm --filter @ko1265/file-preview-kit-react build`
+   - `pnpm vitest run tests/react-adapter-contract.test.ts`
+   - `pnpm pack:verify`
+   - `pnpm smoke:consumer`
+5. Do not list `@ko1265/file-preview-kit-react` under "Published Packages" here until a real npm publish and post-publish verification are complete.
 
 ## Published Packages
 
 - `@ko1265/file-preview-kit-shared@0.1.0`
 - `@ko1265/file-preview-kit-core@0.1.0`
 - `@ko1265/file-preview-kit-web-components@0.1.0`
+
+React remains intentionally absent from this list until an actual public npm release happens.
 
 ## Notes
 

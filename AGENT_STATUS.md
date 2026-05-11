@@ -1,8 +1,8 @@
 # Agent Status
 
-Updated: 2026-05-08
+Updated: 2026-05-11
 
-Current goal: start v0.3 with the highest-value Office improvements, especially `xlsx` readability/stability and `docx` readability/safety.
+Current goal: plan and execute v2.0 framework adapters without duplicating the preview engine.
 
 Recent completed work:
 - Web Component now exposes workbook preview limits as attributes (`workbook-max-sheets`, `workbook-max-rows`, `workbook-max-columns`) with property override support.
@@ -26,19 +26,19 @@ Recent completed work:
 
 Key risks:
 - Office previews are still readable extracts, not layout-faithful renderers.
-- Complex workbook constructs like frozen panes, comments, and rich cell styling are still not represented.
-- Vitest currently hits an `esbuild` spawn `EPERM` in this shell; `pnpm.cmd exec tsc -b packages/shared packages/core packages/web-components` passed for the touched TypeScript packages.
-- The repo has concurrent unstaged work; continue forward without reverting others' changes.
+- Framework adapters can become expensive if each framework starts carrying its own preview logic.
+- React should prove the adapter boundary before Vue, Angular, or Svelte are implemented as full packages.
+- Angular and Svelte should start as docs/smoke examples unless real integration friction justifies packages.
 
 Immediate next steps:
-1. Keep pushing `docx` readability/safety if we want richer conversion notes or more fixture breadth.
-2. Add more realistic Office fixtures if we want confidence beyond the current Mammoth/XLSX seams.
-3. Keep `pptx` low priority unless Office priorities shift.
+1. Add `packages/react` as the first adapter package.
+2. Map Web Component object properties and custom events into React props/callbacks.
+3. Add React usage docs and focused verification.
 
 Files/modules in focus:
-- `packages/core/src/office.ts`
-- `packages/web-components/src/styles.ts`
-- `tests/fixtures/office.ts`
-- `tests/plugins.test.ts`
+- `V2_DEVELOPMENT_PLAN.md`
+- `KANBAN.md`
+- `packages/web-components/src/file-preview.ts`
+- `packages/react`
 - `STATUS.md`
-- `CHANGELOG.md`
+- `ROADMAP.md`

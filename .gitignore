@@ -16,7 +16,6 @@ apps/demo/vite.config.js.map
 apps/demo/vite.config.d.ts.map
 AGENT_STATUS.md
 STATUS.md
-KANBAN.md
 AGENT_HANDOFF.md
 .pnpm-store/
 smoke/consumer-smoke/.artifacts/

@@ -8,7 +8,7 @@ describe("public launch assets", () => {
 
     expect(assets).toContain("LAUNCH_ASSET.svg");
     expect(assets).toContain(
-      "A compact browser-only preview demo covering public URL, auth-shaped request handling, Office extracts, and media previews."
+      "A compact browser-only preview demo covering browser-readable public URL sources, auth-shaped request handling, Office extracts, and media previews."
     );
     expect(assets).toContain("not imply layout-faithful Office rendering or guaranteed public endpoint availability");
   });

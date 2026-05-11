@@ -9,7 +9,8 @@ const pnpmCommand = process.platform === "win32" ? "pnpm.cmd" : "pnpm";
 const publishablePackages = [
   join(repoRoot, "packages", "shared"),
   join(repoRoot, "packages", "core"),
-  join(repoRoot, "packages", "web-components")
+  join(repoRoot, "packages", "web-components"),
+  join(repoRoot, "packages", "react")
 ];
 
 await main();

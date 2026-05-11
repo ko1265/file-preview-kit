@@ -12,4 +12,8 @@ describe("package entrypoints", () => {
   it("import the built web-components entrypoint without module resolution errors", async () => {
     await expect(import("../packages/web-components/dist/index.js")).resolves.toBeTruthy();
   });
+
+  it("import the built react entrypoint without module resolution errors", async () => {
+    await expect(import("../packages/react/dist/index.js")).resolves.toBeTruthy();
+  });
 });

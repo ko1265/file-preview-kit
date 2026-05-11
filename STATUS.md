@@ -1,6 +1,6 @@
 # Project Status
 
-Updated: 2026-05-08
+Updated: 2026-05-11
 
 ## Completed
 
@@ -41,18 +41,19 @@ Updated: 2026-05-08
 
 ## In Progress
 
-- Early v0.3 Office-focused quality pass, with `xlsx` and `docx` ahead of `pptx`.
+- v2.0 framework-adapter planning on `codex/v2-framework-adapters`.
+- React-first adapter strategy, with Vue second and Angular/Svelte starting as documented integration paths.
 
 ## Known Risks
 
 - Remote preview still depends on browser CORS behavior.
 - Office previews are intentionally basic and emphasize readable extraction over layout fidelity.
-- Large or unusually formatted Office files still need broader browser coverage and visual verification before a 1.0 release.
+- Framework adapters can accidentally duplicate preview logic if their boundaries are not kept thin.
 - `pdf.js` support adds a large optional worker asset, so bundle strategy should keep being monitored.
 
 ## Immediate Next Steps
 
-1. Continue with `docx` readability/safety and more realistic binary fixtures now that the workbook slice has a clean checkpoint.
-2. Add more realistic binary `docx` fixtures if we want image coverage without relying on Mammoth loader seams.
-3. Keep `pptx` low priority unless Office priorities shift.
+1. Create the React adapter package skeleton.
+2. Implement the React `FilePreview` wrapper around the existing Web Component.
+3. Add React usage docs and focused verification.
 4. Review future bundle-splitting opportunities for large optional handlers.

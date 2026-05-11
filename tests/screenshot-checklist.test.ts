@@ -12,8 +12,8 @@ describe("screenshot checklist", () => {
     expect(checklist).toContain("Office sample");
     expect(checklist).toContain("Media sample");
     expect(checklist).toContain("Manual Fallback");
-    expect(checklist).toContain("If automated browser capture is unavailable, take the screenshot manually from the demo page.");
+    expect(checklist).toContain("If the visual needs to be refreshed, review it manually from the demo page.");
     expect(note).toContain("## What To Show");
-    expect(checklist).toContain("The Office screenshot path now uses local static demo files");
+    expect(checklist).toContain("The Office scenes are backed by local static demo files");
   });
 });
