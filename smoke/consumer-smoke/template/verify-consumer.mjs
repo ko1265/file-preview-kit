@@ -37,6 +37,7 @@ assert.ok(sharedModule, "shared package should import successfully");
 
 const { FilePreviewService } = await import("@ko1265/file-preview-kit-core");
 const { FilePreviewElement, registerFilePreviewElement } = await import("@ko1265/file-preview-kit-web-components");
+const React = await import("react");
 const { FilePreview, ensureFilePreviewElementRegistered } = await import("@ko1265/file-preview-kit-react");
 
 const service = new FilePreviewService();
@@ -69,7 +70,7 @@ assert.equal(
   "React adapter should register the default custom element"
 );
 
-const reactElement = FilePreview({
+const reactElement = React.createElement(FilePreview, {
   src: "https://consumer.example/files/readme.md",
   fileName: "readme.md",
   requestConfig: {
@@ -79,6 +80,6 @@ const reactElement = FilePreview({
   },
   onLoad() {}
 });
-assert.equal(reactElement.type, "file-preview", "React adapter should render the file-preview custom element");
+assert.equal(reactElement.type, FilePreview, "React adapter should be consumable through React.createElement");
 
 console.log("consumer smoke verified");

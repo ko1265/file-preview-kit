@@ -6,7 +6,7 @@ Updated: 2026-05-11
 
 1. Keep v2.0 work on `v2-framework-adapters`.
 2. Use [V2_DEVELOPMENT_PLAN.md](V2_DEVELOPMENT_PLAN.md) as the v2.0 implementation plan.
-3. Use [KANBAN.md](KANBAN.md) as the compact working board.
+3. Keep any active kanban as a local working board; do not treat it as release documentation.
 4. Start with the React adapter package and prove the adapter boundary before adding Vue.
 5. Keep Angular and Svelte as documented integration paths until full package value is proven.
 

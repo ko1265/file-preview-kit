@@ -52,7 +52,7 @@ Deliverables:
 
 Exit criteria:
 
-- `ROADMAP.md`, `NEXT_STEPS.md`, and `KANBAN.md` agree on the same v2.0 direction.
+- `ROADMAP.md`, `NEXT_STEPS.md`, and this plan agree on the same v2.0 direction.
 
 ### M1: React Adapter
 

@@ -41,7 +41,7 @@ The project has completed its `v1.0` closeout for the current browser-only previ
 - `@ko1265/file-preview-kit-angular`: deferred until docs/smoke examples prove package value.
 - `@ko1265/file-preview-kit-svelte`: deferred until docs/smoke examples prove package value.
 
-See [V2_DEVELOPMENT_PLAN.md](V2_DEVELOPMENT_PLAN.md) and [KANBAN.md](KANBAN.md) for the active task plan.
+See [V2_DEVELOPMENT_PLAN.md](V2_DEVELOPMENT_PLAN.md) for the active milestone plan.
 
 ## Exit Criteria Already Met
 

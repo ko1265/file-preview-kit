@@ -1,5 +1,5 @@
 import { spawn } from "node:child_process";
-import { cp, mkdir, readFile, readdir, rm, writeFile } from "node:fs/promises";
+import { cp, mkdir, readFile, readdir, realpath, rm, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { gunzipSync } from "node:zlib";
@@ -184,25 +184,10 @@ async function installPackedTarballs(tarballs) {
   }
 }
 
-async function installReactPeerShim() {
-  const reactDir = path.join(workspaceDir, "node_modules", "react");
-  await mkdir(reactDir, { recursive: true });
-  await writeFile(
-    path.join(reactDir, "package.json"),
-    `${JSON.stringify({ name: "react", version: "19.0.0", type: "module", exports: "./index.js" }, null, 2)}\n`,
-    "utf8"
-  );
-  await writeFile(
-    path.join(reactDir, "index.js"),
-    [
-      "export function createElement(type, props) { return { type, props }; }",
-      "export function forwardRef(render) { render.displayName = render.displayName ?? render.name; return render; }",
-      "export function useEffect() {}",
-      "export function useImperativeHandle() {}",
-      "export function useRef(value) { return { current: value }; }"
-    ].join("\n"),
-    "utf8"
-  );
+async function installReactPeer() {
+  const sourceDir = await realpath(path.join(repoRoot, "packages", "react", "node_modules", "react"));
+  const targetDir = path.join(workspaceDir, "node_modules", "react");
+  await cp(sourceDir, targetDir, { dereference: true, recursive: true });
 }
 
 async function main() {
@@ -228,7 +213,7 @@ async function main() {
 
   console.log("==> Materializing packed tarballs into clean consumer app");
   await installPackedTarballs(tarballs);
-  await installReactPeerShim();
+  await installReactPeer();
 
   console.log("==> Verifying consumer imports and minimal usage");
   await run("node", ["./verify-consumer.mjs"], workspaceDir);

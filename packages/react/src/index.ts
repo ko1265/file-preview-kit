@@ -42,7 +42,7 @@ export interface FilePreviewProps extends FilePreviewHostProps {
 
 type FilePreviewElementLike = HTMLElement & {
   requestConfig: FilePreviewRequestConfig | undefined;
-  previewService: FilePreviewService;
+  previewService?: FilePreviewService;
 };
 
 let registrationPromise: Promise<void> | undefined;
@@ -63,19 +63,26 @@ export function ensureFilePreviewElementRegistered(): Promise<void> {
 
 function setOptionalAttribute(element: HTMLElement, name: string, value: string | undefined): void {
   if (value === undefined) {
-    element.removeAttribute(name);
+    if (element.hasAttribute(name)) {
+      element.removeAttribute(name);
+    }
     return;
   }
 
-  element.setAttribute(name, value);
+  if (element.getAttribute(name) !== value) {
+    element.setAttribute(name, value);
+  }
 }
 
 function applyFilePreviewProps(element: FilePreviewElementLike, props: FilePreviewProps): void {
-  if (props.previewService !== undefined) {
+  if (props.previewService !== undefined && element.previewService !== props.previewService) {
     element.previewService = props.previewService;
   }
 
-  element.requestConfig = props.requestConfig;
+  if (element.requestConfig !== props.requestConfig) {
+    element.requestConfig = props.requestConfig;
+  }
+
   setOptionalAttribute(element, "file-name", props.fileName);
   setOptionalAttribute(element, "mime-type", props.mimeType);
   setOptionalAttribute(element, "src", props.src);
@@ -127,19 +134,9 @@ export const FilePreview = forwardRef<FilePreviewElement, FilePreviewProps>(func
       return;
     }
 
-    let isCurrent = true;
     const removeEventListeners = addEventListeners(element, () => latestProps.current);
 
-    void ensureFilePreviewElementRegistered().then(() => {
-      if (!isCurrent) {
-        return;
-      }
-
-      applyFilePreviewProps(element, latestProps.current);
-    });
-
     return () => {
-      isCurrent = false;
       removeEventListeners();
     };
   }, []);

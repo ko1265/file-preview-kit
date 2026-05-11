@@ -59,15 +59,14 @@ When resuming work:
 1. Read `ROADMAP.md`
 2. Read `NEXT_STEPS.md`
 3. Read `V2_DEVELOPMENT_PLAN.md`
-4. Read `KANBAN.md`
-5. Read `RELEASE_READINESS.md`
-6. Read `README.md`
-7. Check current `git status`
-8. Continue according to the v2.0 framework-adapter priorities unless the user explicitly reprioritizes
+4. Read `RELEASE_READINESS.md`
+5. Read `README.md`
+6. Check current `git status`
+7. Continue according to the v2.0 framework-adapter priorities unless the user explicitly reprioritizes
 
 ## Notes On Status Files
 
 - `AGENT_STATUS.md` is the long-running agent-facing board used in this workspace.
 - `STATUS.md` is the project-facing heartbeat board used in this workspace.
-- `KANBAN.md` is the compact right-side task/progress board shown in the app.
+- `KANBAN.md`, when present locally, is the compact right-side task/progress board shown in the app and is not release documentation.
 - `AGENT_HANDOFF.md` remains a handoff note rather than the canonical long-term board.
