@@ -6,7 +6,7 @@ This is the operator runbook for the first public npm release of `file-preview-k
 
 Status: completed for `0.1.0`.
 
-The repository now also carries a v2.0 React adapter milestone that is release-ready in-repo, but not yet recorded here as a completed public npm publish.
+The repository now also carries v2.0 React/Vue adapter milestones that are release-scoped in-repo, but not yet recorded here as completed public npm publishes.
 
 ## Historical Release Target
 
@@ -45,6 +45,18 @@ Additional expected result:
 - the React package build passes
 - the React adapter contract test passes
 
+If the release candidate includes `@ko1265/file-preview-kit-vue`, also run:
+
+```bash
+pnpm --filter @ko1265/file-preview-kit-vue build
+pnpm vitest run tests/vue-adapter-contract.test.ts
+```
+
+Additional expected result:
+
+- the Vue package build passes
+- the Vue adapter contract test passes
+
 Confirm npm identity:
 
 ```bash
@@ -63,7 +75,7 @@ Publish in dependency order:
 2. `packages/core`
 3. `packages/web-components`
 
-For a future v2.0 adapter publish that includes React, keep the same dependency-first order and publish `packages/react` only after `packages/web-components`, because the React package is a thin adapter on top of the existing browser-native surface.
+For a future v2.0 adapter publish that includes React and/or Vue, keep the same dependency-first order and publish `packages/react` and `packages/vue` only after `packages/web-components`, because both adapter packages are thin wrappers on top of the existing browser-native surface.
 
 ## Publish Commands
 
@@ -113,6 +125,17 @@ Success check:
 
 - npm returns a successful publish for `@ko1265/file-preview-kit-react@<release-version>`
 
+### 5. Vue Adapter (future v2.0 publish only)
+
+```bash
+cd E:\file-preview-kit\packages\vue
+pnpm publish --access public --no-git-checks
+```
+
+Success check:
+
+- npm returns a successful publish for `@ko1265/file-preview-kit-vue@<release-version>`
+
 ## Post-Publish Registry Check
 
 After the published package set is live, run one real registry install check from a clean temp folder outside this repo.
@@ -126,10 +149,11 @@ npm init -y
 pnpm add @ko1265/file-preview-kit-core @ko1265/file-preview-kit-web-components
 ```
 
-If the release includes React, install it too:
+If the release includes React and/or Vue, install those adapter peers too:
 
 ```bash
 pnpm add react @ko1265/file-preview-kit-react
+pnpm add vue @ko1265/file-preview-kit-vue
 ```
 
 Then verify the package boundaries honestly:
@@ -148,18 +172,26 @@ If the release includes React, verify the adapter import and minimal render path
 node -e "const registry = new Map(); globalThis.HTMLElement = class { attachShadow() { return { innerHTML: '', querySelector() { return null; }, replaceChildren() {} }; } }; globalThis.customElements = { define(name, ctor) { if (!registry.has(name)) registry.set(name, ctor); }, get(name) { return registry.get(name); } }; globalThis.window = { customElements: globalThis.customElements, location: { href: 'https://consumer.example/app/' } }; Promise.all([import('react'), import('@ko1265/file-preview-kit-web-components'), import('@ko1265/file-preview-kit-react')]).then(async ([React, wc, adapter]) => { await adapter.ensureFilePreviewElementRegistered(); const element = React.createElement(adapter.FilePreview, { src: 'https://consumer.example/files/readme.md' }); console.log(globalThis.customElements.get('file-preview') === wc.FilePreviewElement && element.type === adapter.FilePreview ? 'ok' : 'fail'); })"
 ```
 
+If the release includes Vue, verify the adapter import and minimal render path:
+
+```bash
+node -e "const registry = new Map(); const { pathToFileURL } = require('node:url'); const { resolve } = require('node:path'); globalThis.HTMLElement = class { attachShadow() { return { innerHTML: '', querySelector() { return null; }, replaceChildren() {} }; } }; globalThis.customElements = { define(name, ctor) { if (!registry.has(name)) registry.set(name, ctor); }, get(name) { return registry.get(name); } }; globalThis.window = { customElements: globalThis.customElements, location: { href: 'https://consumer.example/app/' } }; Promise.all([import(pathToFileURL(resolve('node_modules/vue/dist/vue.runtime.esm-browser.js')).href), import('@ko1265/file-preview-kit-web-components'), import('@ko1265/file-preview-kit-vue')]).then(async ([Vue, wc, adapter]) => { await adapter.ensureFilePreviewElementRegistered(); const vnode = Vue.h(adapter.FilePreview, { src: 'https://consumer.example/files/readme.md' }); console.log(globalThis.customElements.get('file-preview') === wc.FilePreviewElement && vnode.type === adapter.FilePreview ? 'ok' : 'fail'); })"
+```
+
 Expected result:
 
 - install succeeds from the public registry
 - the `core` import prints `ok`
 - the `web-components` registration check prints `ok`
 - if React was published in this release, the React adapter smoke prints `ok`
+- if Vue was published in this release, the Vue adapter smoke prints `ok`
 
 ## If Something Fails
 
 - If `shared` publish fails: stop immediately and do not publish `core` or `web-components`
 - If `core` publish fails: stop before `web-components`
 - If `web-components` publish fails: stop before `react`
+- If `react` publish fails: stop before `vue`
 - If registry install fails after publish: treat it as a release blocker for wider announcement, even if publish technically succeeded
 
 ## Notes
@@ -168,4 +200,4 @@ Expected result:
 - This runbook was used for the first public `0.1.0` release and now remains as a historical or replay reference.
 - Keep `NPM_PUBLISH_CHECKLIST.md` as the higher-level readiness document; use this file for the actual execution sequence.
 - The repository currently carries a local `1.0.0` baseline, but a future public `1.0.0` package publish should still be treated as a separate operator action.
-- If a future adapter release includes `@ko1265/file-preview-kit-react`, re-run `pnpm pack:verify` and `pnpm smoke:consumer` after the final version bump so the packed React tarball and consumer import path are verified with publish-ready versions.
+- If a future adapter release includes `@ko1265/file-preview-kit-react` and/or `@ko1265/file-preview-kit-vue`, re-run `pnpm pack:verify` and `pnpm smoke:consumer` after the final version bump so the packed adapter tarballs and consumer import paths are verified with publish-ready versions.

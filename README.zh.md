@@ -233,7 +233,7 @@ pnpm pack:verify
 pnpm smoke:consumer
 ```
 
-`pnpm smoke:consumer` 会构建可发布包、打本地 tarball、安装到一个干净 sample app 里，并验证外部消费者能导入 core、Web Component 和 React 适配包的公开入口。
+`pnpm smoke:consumer` 会构建可发布包、打本地 tarball、安装到一个干净 sample app 里，并验证外部消费者能导入 core、Web Component 和框架适配包的公开入口。
 
 ## 发布状态
 

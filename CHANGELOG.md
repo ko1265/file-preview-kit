@@ -2,6 +2,15 @@
 
 ## Unreleased
 
+### v2.0 Vue adapter milestone
+
+- Added the `@ko1265/file-preview-kit-vue` adapter package as the second v2.0 framework milestone on top of the existing browser-only preview baseline.
+- Added a typed Vue `FilePreview` wrapper around the existing Web Component surface, including DOM property mapping for `requestConfig` and `previewService`.
+- Added Vue emits for `file-preview:loadstart`, `file-preview:load`, and `file-preview:error`.
+- Added Vue-focused package documentation, including Vite usage and Nuxt client-only guidance.
+- Added Vue adapter contract coverage for package metadata, thin-wrapper behavior, DOM property mapping, custom events, SSR documentation boundaries, and release verification hooks.
+- Extended packed-tarball and consumer smoke verification so the Vue adapter participates whenever `packages/vue` is present.
+
 ### v2.0 React adapter milestone
 
 - Added the `@ko1265/file-preview-kit-react` adapter package as the first v2.0 framework milestone on top of the existing browser-only preview baseline.

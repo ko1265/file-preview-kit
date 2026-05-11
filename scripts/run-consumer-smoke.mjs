@@ -1,4 +1,5 @@
 import { spawn } from "node:child_process";
+import { existsSync } from "node:fs";
 import { cp, mkdir, readFile, readdir, realpath, rm, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -36,6 +37,19 @@ const publishablePackages = [
     dir: path.join(repoRoot, "packages", "react")
   }
 ];
+
+const optionalPublishablePackages = [
+  {
+    name: "@ko1265/file-preview-kit-vue",
+    dir: path.join(repoRoot, "packages", "vue")
+  }
+];
+
+for (const pkg of optionalPublishablePackages) {
+  if (existsSync(pkg.dir)) {
+    publishablePackages.push(pkg);
+  }
+}
 
 function isInsideSmokeRoot(targetPath) {
   const relative = path.relative(smokeRoot, targetPath);
@@ -85,20 +99,28 @@ async function packPackage(pkg) {
 }
 
 async function buildPublishablePackages() {
+  const buildTargets = [
+    "packages/shared/tsconfig.json",
+    "packages/core/tsconfig.json",
+    "packages/web-components/tsconfig.json",
+    "packages/react/tsconfig.json"
+  ];
+  const distDirs = ["packages/core/dist", "packages/web-components/dist", "packages/react/dist"];
+
+  if (existsSync(path.join(repoRoot, "packages", "vue", "tsconfig.json"))) {
+    buildTargets.push("packages/vue/tsconfig.json");
+    distDirs.push("packages/vue/dist");
+  }
+
   await run(
     tscCommand,
-    [
-      "-b",
-      "packages/shared/tsconfig.json",
-      "packages/core/tsconfig.json",
-      "packages/web-components/tsconfig.json",
-      "packages/react/tsconfig.json"
-    ],
+    ["-b", ...buildTargets],
     repoRoot
   );
-  await run("node", ["./scripts/fix-relative-esm-extensions.mjs", "packages/core/dist"], repoRoot);
-  await run("node", ["./scripts/fix-relative-esm-extensions.mjs", "packages/web-components/dist"], repoRoot);
-  await run("node", ["./scripts/fix-relative-esm-extensions.mjs", "packages/react/dist"], repoRoot);
+
+  for (const distDir of distDirs) {
+    await run("node", ["./scripts/fix-relative-esm-extensions.mjs", distDir], repoRoot);
+  }
 }
 
 function normalizeForPackageJson(value) {
@@ -190,6 +212,30 @@ async function installReactPeer() {
   await cp(sourceDir, targetDir, { dereference: true, recursive: true });
 }
 
+async function installVuePeer() {
+  const sourceDir = await realpath(path.join(repoRoot, "packages", "vue", "node_modules", "vue"));
+  const targetDir = path.join(workspaceDir, "node_modules", "vue");
+  await mkdir(targetDir, { recursive: true });
+  await cp(path.join(sourceDir, "dist"), path.join(targetDir, "dist"), { dereference: true, recursive: true });
+  await writeFile(
+    path.join(targetDir, "package.json"),
+    `${JSON.stringify(
+      {
+        name: "vue",
+        private: true,
+        type: "module",
+        exports: {
+          ".": "./index.js"
+        }
+      },
+      null,
+      2
+    )}\n`,
+    "utf8"
+  );
+  await writeFile(path.join(targetDir, "index.js"), 'export * from "./dist/vue.runtime.esm-browser.js";\n', "utf8");
+}
+
 async function main() {
   console.log("==> Building publishable packages");
   await buildPublishablePackages();
@@ -214,6 +260,9 @@ async function main() {
   console.log("==> Materializing packed tarballs into clean consumer app");
   await installPackedTarballs(tarballs);
   await installReactPeer();
+  if (publishablePackages.some((pkg) => pkg.name === "@ko1265/file-preview-kit-vue")) {
+    await installVuePeer();
+  }
 
   console.log("==> Verifying consumer imports and minimal usage");
   await run("node", ["./verify-consumer.mjs"], workspaceDir);

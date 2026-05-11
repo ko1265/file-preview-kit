@@ -15,6 +15,7 @@ For the actual first-release command sequence, use [NPM_RELEASE_RUNBOOK.md](NPM_
 ## Current v2.0 Release Candidate
 
 - `@ko1265/file-preview-kit-react`
+- `@ko1265/file-preview-kit-vue`
 - Status: validated in-repo for release readiness, but not yet recorded here as a public npm publish.
 
 ## Already Verified
@@ -30,21 +31,23 @@ For the actual first-release command sequence, use [NPM_RELEASE_RUNBOOK.md](NPM_
   - `types`
   - `publishConfig.access = public`
 - `pnpm pack:check` succeeds for all publishable packages, including `@ko1265/file-preview-kit-react`.
+- `pnpm pack:check` is expected to include `@ko1265/file-preview-kit-vue` automatically when `packages/vue` is present.
 - Packed tarballs rewrite internal workspace dependencies correctly:
   - `@ko1265/file-preview-kit-core` depends on `@ko1265/file-preview-kit-shared` at the current workspace version
   - `@ko1265/file-preview-kit-web-components` depends on `@ko1265/file-preview-kit-core` and `@ko1265/file-preview-kit-shared` at the current workspace version
   - `@ko1265/file-preview-kit-react` depends on `@ko1265/file-preview-kit-core`, `@ko1265/file-preview-kit-shared`, and `@ko1265/file-preview-kit-web-components` at the current workspace version
+  - `@ko1265/file-preview-kit-vue` should depend on `@ko1265/file-preview-kit-core`, `@ko1265/file-preview-kit-shared`, and `@ko1265/file-preview-kit-web-components` at the current workspace version when it joins the publishable set
 - The published packages are intentionally scoped as `@ko1265/*`; the root workspace package stays private and is not part of the npm release surface.
 - Package-level READMEs now include the remote file access/CORS guidance that matters for real adopters.
 - The repository now includes a repeatable consumer smoke test at `pnpm smoke:consumer` that:
   - packs the local publishable packages
   - installs those tarballs into a clean sample app
-  - verifies that a consumer can import `@ko1265/file-preview-kit-core`, `@ko1265/file-preview-kit-web-components`, and `@ko1265/file-preview-kit-react`
+  - verifies that a consumer can import `@ko1265/file-preview-kit-core`, `@ko1265/file-preview-kit-web-components`, `@ko1265/file-preview-kit-react`, and `@ko1265/file-preview-kit-vue` when those adapter packages are in scope
 - `pnpm pack:verify` now checks the packed tarballs for:
   - expected entrypoint files from `main` / `module` / `types` / `exports`
   - `README.md` and `LICENSE`
   - internal workspace dependency rewrite to the publish version
-  - React adapter tarball coverage when `@ko1265/file-preview-kit-react` is in scope for release
+  - React and Vue adapter tarball coverage when those packages are in scope for release
 
 ## First Release Outcome
 
@@ -89,7 +92,12 @@ For the actual first-release command sequence, use [NPM_RELEASE_RUNBOOK.md](NPM_
    - `pnpm vitest run tests/react-adapter-contract.test.ts`
    - `pnpm pack:verify`
    - `pnpm smoke:consumer`
-5. Do not list `@ko1265/file-preview-kit-react` under "Published Packages" here until a real npm publish and post-publish verification are complete.
+5. If a future v2.0 release adds `@ko1265/file-preview-kit-vue`, publish it after `web-components` and keep its release signoff tied to:
+   - `pnpm --filter @ko1265/file-preview-kit-vue build`
+   - `pnpm vitest run tests/vue-adapter-contract.test.ts`
+   - `pnpm pack:verify`
+   - `pnpm smoke:consumer`
+6. Do not list `@ko1265/file-preview-kit-react` or `@ko1265/file-preview-kit-vue` under "Published Packages" here until a real npm publish and post-publish verification are complete.
 
 ## Published Packages
 
@@ -97,7 +105,7 @@ For the actual first-release command sequence, use [NPM_RELEASE_RUNBOOK.md](NPM_
 - `@ko1265/file-preview-kit-core@0.1.0`
 - `@ko1265/file-preview-kit-web-components@0.1.0`
 
-React remains intentionally absent from this list until an actual public npm release happens.
+React and Vue adapters remain intentionally absent from this list until actual public npm releases happen.
 
 ## Notes
 
