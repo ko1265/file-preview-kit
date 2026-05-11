@@ -12,11 +12,41 @@ async function readRepoFile(path: string): Promise<string> {
   return await readFile(absolutePath, "utf-8");
 }
 
+async function readOptionalRepoFile(path: string): Promise<string | null> {
+  const absolutePath = resolve(repoRoot, path);
+
+  if (!existsSync(absolutePath)) {
+    return null;
+  }
+
+  return await readFile(absolutePath, "utf-8");
+}
+
 async function listPackageNames(): Promise<string[]> {
   const packagesRoot = resolve(repoRoot, "packages");
   const entries = await readdir(packagesRoot, { withFileTypes: true });
 
   return entries.filter((entry) => entry.isDirectory()).map((entry) => entry.name);
+}
+
+async function readFrameworkSmokeStrategyDoc(): Promise<{ path: string; content: string } | null> {
+  const candidatePaths = [
+    "docs/frameworks/smoke-strategy.md",
+    "docs/frameworks/framework-smoke-strategy.md",
+    "docs/frameworks/angular-svelte-smoke-strategy.md",
+    "docs/frameworks/framework-integration-smoke-strategy.md",
+    "FRAMEWORK_SMOKE_STRATEGY.md"
+  ];
+
+  for (const path of candidatePaths) {
+    const content = await readOptionalRepoFile(path);
+
+    if (content !== null) {
+      return { path, content };
+    }
+  }
+
+  return null;
 }
 
 describe("framework integration docs", () => {
@@ -139,5 +169,39 @@ describe("framework integration docs", () => {
     expect(existsSync(join(repoRoot, "packages/svelte"))).toBe(false);
     expect(plan).toContain("only after Angular demand is proven");
     expect(plan).toContain("only after Svelte demand is proven");
+  });
+
+  it("keeps any dedicated Angular/Svelte smoke strategy doc focused on future lightweight proof points", async () => {
+    const smokeStrategyDoc = await readFrameworkSmokeStrategyDoc();
+
+    if (!smokeStrategyDoc) {
+      return;
+    }
+
+    const { content, path } = smokeStrategyDoc;
+
+    expect(content, `${path} should describe the Angular/Svelte smoke slice`).toMatch(/Angular/i);
+    expect(content, `${path} should describe the Angular/Svelte smoke slice`).toMatch(/Svelte/i);
+    expect(
+      content,
+      `${path} should keep the current PR scoped away from heavyweight Angular/Svelte smoke`
+    ).toMatch(
+      /((current|this)\s+pr[\s\S]{0,160}(does not add|doesn't add|keeps|avoid|avoids|without adding)[\s\S]{0,160}(heavyweight|full|broad|e2e|end-to-end)\s+.*smoke|(do not add|don't add)[\s\S]{0,80}(heavyweight|full|broad|e2e|end-to-end)[\s\S]{0,80}(Angular|Svelte)[\s\S]{0,80}smoke)/i
+    );
+    expect(content, `${path} should require registration proof in future smoke`).toMatch(
+      /(register|registration)[\s\S]{0,80}(element|custom element|file-preview)/i
+    );
+    expect(content, `${path} should require DOM property assignment proof in future smoke`).toMatch(
+      /(dom propert|property assignment|assign)[\s\S]{0,120}(requestConfig|previewService)/i
+    );
+    expect(content, `${path} should require custom event proof in future smoke`).toMatch(
+      /(custom events?|native preview lifecycle events?|file-preview:(loadstart|load|error))/i
+    );
+    expect(content, `${path} should require client-only or SSR-boundary proof in future smoke`).toMatch(
+      /(client-only|browser-only|ssr|server-side|server path|client boundary)/i
+    );
+    expect(content, `${path} should keep Angular and Svelte adapter packages deferred`).toMatch(
+      /((adapter packages?|full packages?)[\s\S]{0,120}(defer|deferred|remain deferred|not add|not added)|before creating[\s\S]{0,120}@ko1265\/file-preview-kit-(angular|svelte)|once an Angular or Svelte adapter package exists)/i
+    );
   });
 });

@@ -4,6 +4,7 @@ These guides cover direct framework usage of `@ko1265/file-preview-kit-web-compo
 
 - [Angular](./angular.md)
 - [Svelte and SvelteKit](./svelte.md)
+- [Angular/Svelte smoke strategy](./smoke-strategy.md)
 
 Shared constraints:
 
