@@ -37,6 +37,10 @@ If your product needs stable remote preview, plan for a controlled file distribu
 - `@ko1265/file-preview-kit-shared`: shared preview contracts and types
 - `@ko1265/file-preview-kit-core`: normalization, registry, service layer, and built-in plugins
 - `@ko1265/file-preview-kit-web-components`: the `file-preview` custom element
+- `@ko1265/file-preview-kit-react`: React adapter package for v2.0 framework integration
+- `@ko1265/file-preview-kit-vue`: Vue adapter package for v2.0 framework integration
+
+Angular and Svelte are currently documented Web Component integration paths, not adapter packages. See [Framework Integration Notes](docs/frameworks/README.md).
 
 ## Install
 

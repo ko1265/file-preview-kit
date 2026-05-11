@@ -87,6 +87,8 @@ Exit criteria:
 
 ### M3: Framework Integration Examples
 
+Status: in progress.
+
 Deliverables:
 
 - Angular integration guide using the Web Component and `CUSTOM_ELEMENTS_SCHEMA`

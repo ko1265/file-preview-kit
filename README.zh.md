@@ -37,6 +37,10 @@
 - `@ko1265/file-preview-kit-shared`：共享预览协议与类型
 - `@ko1265/file-preview-kit-core`：归一化、插件注册表、服务层和内置插件
 - `@ko1265/file-preview-kit-web-components`：`file-preview` 自定义元素
+- `@ko1265/file-preview-kit-react`：面向 v2.0 框架接入的 React 适配包
+- `@ko1265/file-preview-kit-vue`：面向 v2.0 框架接入的 Vue 适配包
+
+Angular 和 Svelte 当前是基于 Web Component 的文档化接入路径，还不是独立适配包。见 [Framework Integration Notes](docs/frameworks/README.md)。
 
 ## 安装
 
