@@ -243,6 +243,8 @@ pnpm smoke:consumer
 
 ## Release notes
 
+- The repository is now public at the `v1.0.0` baseline.
+- The currently published npm packages are still `0.1.0` and will be aligned to `1.0.0` in the next package release.
 - The first public npm release landed as `0.1.0`.
 - The current repository state is the project's `v1.0` engineering and documentation baseline.
 - The published packages are `@ko1265/file-preview-kit-shared`, `@ko1265/file-preview-kit-core`, and `@ko1265/file-preview-kit-web-components`.
