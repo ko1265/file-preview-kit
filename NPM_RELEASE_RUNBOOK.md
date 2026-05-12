@@ -4,9 +4,9 @@ Updated: 2026-05-11
 
 This is the operator runbook for the first public npm release of `file-preview-kit`.
 
-Status: completed for `0.1.0`.
+Status: completed for the initial `0.1.0` release and the `1.0.0` framework adapter release.
 
-The repository now also carries v2.0 React/Vue/Svelte adapter milestones that are release-scoped in-repo, but not yet recorded here as completed public npm publishes.
+The repository now carries published `1.0.0` packages for shared, core, Web Components, React, Vue, and Svelte.
 
 ## Historical Release Target
 
@@ -88,7 +88,7 @@ Publish in dependency order:
 2. `packages/core`
 3. `packages/web-components`
 
-For a future v2.0 adapter publish that includes React, Vue, and/or Svelte, keep the same dependency-first order and publish `packages/react`, `packages/vue`, and `packages/svelte` only after `packages/web-components`, because those adapter packages are thin wrappers on top of the existing browser-native surface.
+For the `1.0.0` v2.0 adapter publish, the same dependency-first order was used and `packages/react`, `packages/vue`, and `packages/svelte` were published only after `packages/web-components`, because those adapter packages are thin wrappers on top of the existing browser-native surface.
 
 ## Publish Commands
 

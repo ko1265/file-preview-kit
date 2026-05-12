@@ -2,7 +2,7 @@
 
 Updated: 2026-05-11
 
-This note is now a post-closeout status record for the repository's `v1.0` baseline and the already-published `0.1.0` npm packages.
+This note is now a post-closeout status record for the repository's `v1.0` baseline and the published npm packages.
 
 ## Stable Facts
 
@@ -14,6 +14,7 @@ This note is now a post-closeout status record for the repository's `v1.0` basel
 - Packed tarball structure is verified with `pnpm pack:verify`.
 - A clean external-consumer smoke path exists via `pnpm smoke:consumer`.
 - The first public npm version was published as `0.1.0`.
+- The shared, core, Web Components, React, Vue, and Svelte packages are published as `1.0.0`.
 - A post-publish registry install check has already been completed.
 
 ## Still True
@@ -28,7 +29,7 @@ This note is now a post-closeout status record for the repository's `v1.0` basel
 ## Repository Closeout Notes
 
 - The repository now treats its current API, package boundaries, and browser-only expectations as the `v1.0` baseline.
-- The public npm packages remain on `0.1.0` until a future versioned follow-up is published.
+- The latest public npm packages are aligned on `1.0.0`.
 - A future public GitHub repository opening should happen after operator review, not as part of normal code churn.
 
 ## Next Read

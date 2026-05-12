@@ -2,7 +2,9 @@
 
 Updated: 2026-05-12
 
-This document records the React/Vue adapter npm release-prep dry run. It does not authorize or record a real npm publish.
+This document records the React/Vue adapter npm release-prep dry run that happened before the real `1.0.0` npm publish. It is historical dry-run evidence, not the current publish status.
+
+The real `1.0.0` publish later completed for shared, core, Web Components, React, Vue, and Svelte, followed by registry version checks and a clean registry install smoke.
 
 ## Current Registry Reality
 

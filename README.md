@@ -37,11 +37,9 @@ If your product needs stable remote preview, plan for a controlled file distribu
 - `@ko1265/file-preview-kit-shared`: shared preview contracts and types
 - `@ko1265/file-preview-kit-core`: normalization, registry, service layer, and built-in plugins
 - `@ko1265/file-preview-kit-web-components`: the `file-preview` custom element
-- `@ko1265/file-preview-kit-react`: in-repo React adapter candidate for v2.0 framework integration
-- `@ko1265/file-preview-kit-vue`: in-repo Vue adapter candidate for v2.0 framework integration
-- `@ko1265/file-preview-kit-svelte`: in-repo Svelte action adapter candidate for v2.0 framework integration
-
-The React, Vue, and Svelte adapters are not listed as published npm packages until a real adapter publish and registry verification are complete.
+- `@ko1265/file-preview-kit-react`: React adapter for v2.0 framework integration
+- `@ko1265/file-preview-kit-vue`: Vue adapter for v2.0 framework integration
+- `@ko1265/file-preview-kit-svelte`: Svelte action adapter for v2.0 framework integration
 
 Angular is currently a documented Web Component integration path, not an adapter package. See [Framework Integration Notes](docs/frameworks/README.md).
 
@@ -251,10 +249,10 @@ pnpm smoke:consumer
 ## Release notes
 
 - The repository is now public at the `v1.0.0` baseline.
-- The currently published npm packages are still `0.1.0` and will be aligned to `1.0.0` in the next package release.
-- The first public npm release landed as `0.1.0`.
+- The latest published npm packages are now `1.0.0` for shared, core, Web Components, React, Vue, and Svelte.
+- The first public npm release landed as `0.1.0`; the framework adapter release landed as `1.0.0`.
 - The current repository state is the project's `v1.0` engineering and documentation baseline.
-- The published packages are `@ko1265/file-preview-kit-shared`, `@ko1265/file-preview-kit-core`, and `@ko1265/file-preview-kit-web-components`.
+- The published packages are `@ko1265/file-preview-kit-shared`, `@ko1265/file-preview-kit-core`, `@ko1265/file-preview-kit-web-components`, `@ko1265/file-preview-kit-react`, `@ko1265/file-preview-kit-vue`, and `@ko1265/file-preview-kit-svelte`.
 - Package metadata now includes repository, bugs, and homepage links.
 - Tarball generation is verified with `pnpm pack:verify`.
 - A repeatable packed-tarball consumer check is available via `pnpm smoke:consumer`.

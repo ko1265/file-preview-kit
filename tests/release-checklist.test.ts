@@ -30,11 +30,12 @@ describe("release checklist", () => {
     expect(publishChecklist).toContain("@ko1265/file-preview-kit-react");
     expect(publishChecklist).toContain("@ko1265/file-preview-kit-vue");
     expect(publishChecklist).toContain("@ko1265/file-preview-kit-svelte");
-    expect(publishChecklist).toContain("validated in-repo for release readiness");
+    expect(publishChecklist).toContain("published as `1.0.0`");
     expect(publishChecklist).toContain("pnpm smoke:consumer");
     expect(publishChecklist).toContain("pnpm pack:verify");
-    expect(publishChecklist).toContain("Do not list `@ko1265/file-preview-kit-react`, `@ko1265/file-preview-kit-vue`, or `@ko1265/file-preview-kit-svelte`");
-    expect(publishChecklist).toContain("React, Vue, and Svelte adapters remain intentionally absent");
+    expect(publishChecklist).toContain("@ko1265/file-preview-kit-react@1.0.0");
+    expect(publishChecklist).toContain("@ko1265/file-preview-kit-vue@1.0.0");
+    expect(publishChecklist).toContain("@ko1265/file-preview-kit-svelte@1.0.0");
     expect(publishChecklist).toContain("current consumer smoke only proves packed import plus action behavior");
 
     expect(runbook).toContain("pnpm --filter @ko1265/file-preview-kit-react build");

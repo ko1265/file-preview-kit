@@ -12,13 +12,13 @@ For the actual first-release command sequence, use [NPM_RELEASE_RUNBOOK.md](NPM_
 - `@ko1265/file-preview-kit-core`
 - `@ko1265/file-preview-kit-web-components`
 
-## Current v2.0 Release Candidate
+## Published v2.0 Package Set
 
 - `@ko1265/file-preview-kit-react`
 - `@ko1265/file-preview-kit-vue`
 - `@ko1265/file-preview-kit-svelte`
-- Status: validated in-repo for release readiness, but not yet recorded here as a public npm publish.
-- React/Vue release-prep dry-run evidence is recorded in [NPM_ADAPTER_RELEASE_PREP.md](NPM_ADAPTER_RELEASE_PREP.md).
+- Status: published as `1.0.0` after build, test, pack verification, consumer smoke, registry version checks, and clean registry install smoke.
+- React/Vue release-prep dry-run evidence remains recorded in [NPM_ADAPTER_RELEASE_PREP.md](NPM_ADAPTER_RELEASE_PREP.md) as pre-publish history.
 
 ## Already Verified
 
@@ -107,15 +107,18 @@ For the actual first-release command sequence, use [NPM_RELEASE_RUNBOOK.md](NPM_
    - `pnpm pack:verify`
    - `pnpm smoke:consumer`
    - confirm whether a tiny Svelte/Vite compile smoke is required before public publish; the current consumer smoke only proves packed import plus action behavior
-7. Do not list `@ko1265/file-preview-kit-react`, `@ko1265/file-preview-kit-vue`, or `@ko1265/file-preview-kit-svelte` under "Published Packages" here until a real npm publish and post-publish verification are complete.
+7. Do not list future adapter packages under "Published Packages" until a real npm publish and post-publish verification are complete.
 
 ## Published Packages
 
-- `@ko1265/file-preview-kit-shared@0.1.0`
-- `@ko1265/file-preview-kit-core@0.1.0`
-- `@ko1265/file-preview-kit-web-components@0.1.0`
+- `@ko1265/file-preview-kit-shared@1.0.0`
+- `@ko1265/file-preview-kit-core@1.0.0`
+- `@ko1265/file-preview-kit-web-components@1.0.0`
+- `@ko1265/file-preview-kit-react@1.0.0`
+- `@ko1265/file-preview-kit-vue@1.0.0`
+- `@ko1265/file-preview-kit-svelte@1.0.0`
 
-React, Vue, and Svelte adapters remain intentionally absent from this list until actual public npm releases happen.
+Historical baseline packages were first published as `0.1.0`; the latest public package set is aligned on `1.0.0`.
 
 ## Notes
 
