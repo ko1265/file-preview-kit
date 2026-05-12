@@ -25,10 +25,11 @@ Updated: 2026-05-11
 7. `pnpm pack:verify`
 8. `pnpm smoke:consumer`
 9. Confirm `pnpm pack:verify` still inspects the React, Vue, and Svelte tarball entrypoints, README, LICENSE, and internal workspace dependency rewrites when those adapter packages are publishable.
-10. Confirm `pnpm smoke:consumer` still exercises the packed React, Vue, and Svelte adapter imports plus minimum usage paths alongside the existing consumer checks.
-11. Confirm the demo opens with the compact public sample set.
-12. Confirm `PUBLIC_DEMO_NOTE.md`, `PUBLIC_LAUNCH_ASSETS.md`, `SCREENSHOT_CHECKLIST.md`, and `LAUNCH_ASSET.svg` match the README framing.
-13. Confirm no new Office sample breadth was added beyond the current extraction-oriented scope.
+10. Confirm `pnpm smoke:consumer` still exercises the packed React and Vue adapter imports plus minimum usage paths alongside the existing consumer checks.
+11. Confirm the Svelte smoke is described honestly: current coverage proves packed import plus action behavior, not a real Svelte compiler or SvelteKit app build.
+12. Confirm the demo opens with the compact public sample set.
+13. Confirm `PUBLIC_DEMO_NOTE.md`, `PUBLIC_LAUNCH_ASSETS.md`, `SCREENSHOT_CHECKLIST.md`, and `LAUNCH_ASSET.svg` match the README framing.
+14. Confirm no new Office sample breadth was added beyond the current extraction-oriented scope.
 
 ## Future Release Steps
 

@@ -4,11 +4,19 @@ Svelte action adapter for `file-preview-kit`.
 
 This package stays thin: it registers the existing `file-preview` Web Component on the client, maps object options to DOM properties, and forwards the Web Component lifecycle events to callbacks. It does not render previews itself.
 
+## Status
+
+This package is an in-repo v2.0 adapter candidate and is not published to npm yet. Use a packed local tarball or workspace dependency for review builds until a real npm publish is explicitly completed and verified.
+
 ## Install
+
+After the package is published to npm:
 
 ```bash
 pnpm add @ko1265/file-preview-kit-svelte
 ```
+
+For current repository testing, use `pnpm pack:verify` or `pnpm smoke:consumer` to build and consume the local tarball.
 
 ## Svelte
 

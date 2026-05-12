@@ -125,9 +125,11 @@ describeSveltePackage("Svelte adapter contract", () => {
     ]);
 
     expect(packageReadme).toMatch(/SvelteKit/i);
+    expect(packageReadme).toMatch(/not published to npm yet/i);
     expect(packageReadme).toMatch(/client-only|browser-only|SSR|server-side/i);
     expect(packageReadme).toMatch(/onMount|\$app\/environment|browser/);
     expect(frameworkGuide).toContain("SvelteKit");
+    expect(frameworkGuide).toContain("not published to npm yet");
     expect(frameworkGuide).toContain("import { browser } from \"$app/environment\"");
     expect(frameworkGuide).toContain("if (!browser)");
   });

@@ -2,13 +2,19 @@
 
 Use `@ko1265/file-preview-kit-svelte` when you want the lightweight action adapter. It wraps the existing `file-preview` Web Component registration, DOM property assignment, and lifecycle event wiring without adding a Svelte compiler scaffold.
 
+`@ko1265/file-preview-kit-svelte` is currently an in-repo v2.0 adapter candidate. It is not published to npm yet, so the install command below is for the future public package release, not for the current registry state.
+
 You can still use `@ko1265/file-preview-kit-web-components` directly when you want full manual control.
 
 ## Install
 
+After the package is published to npm:
+
 ```bash
 pnpm add @ko1265/file-preview-kit-svelte
 ```
+
+For current repository testing, use the packed local tarball produced by `pnpm pack:verify` or `pnpm smoke:consumer`.
 
 For direct Web Component usage or a custom `FilePreviewService`, install:
 

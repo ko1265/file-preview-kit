@@ -105,6 +105,7 @@ For the actual first-release command sequence, use [NPM_RELEASE_RUNBOOK.md](NPM_
    - `pnpm vitest run tests/svelte-adapter-contract.test.ts`
    - `pnpm pack:verify`
    - `pnpm smoke:consumer`
+   - confirm whether a tiny Svelte/Vite compile smoke is required before public publish; the current consumer smoke only proves packed import plus action behavior
 7. Do not list `@ko1265/file-preview-kit-react`, `@ko1265/file-preview-kit-vue`, or `@ko1265/file-preview-kit-svelte` under "Published Packages" here until a real npm publish and post-publish verification are complete.
 
 ## Published Packages
@@ -113,7 +114,7 @@ For the actual first-release command sequence, use [NPM_RELEASE_RUNBOOK.md](NPM_
 - `@ko1265/file-preview-kit-core@0.1.0`
 - `@ko1265/file-preview-kit-web-components@0.1.0`
 
-React and Vue adapters remain intentionally absent from this list until actual public npm releases happen.
+React, Vue, and Svelte adapters remain intentionally absent from this list until actual public npm releases happen.
 
 ## Notes
 

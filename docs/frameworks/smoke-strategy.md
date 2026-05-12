@@ -6,6 +6,8 @@ Do not add a heavyweight Angular or Svelte package smoke yet.
 
 `@ko1265/file-preview-kit-angular` still does not exist, and `@ko1265/file-preview-kit-svelte` is intentionally just a thin action/helper package. A full scaffolded Angular or Svelte app smoke in this PR would mostly test framework tooling churn rather than meaningful adapter behavior.
 
+The current consumer smoke for Svelte covers packed-package import, default custom element registration, option-to-DOM mapping, callback wiring, and listener cleanup through the action API. It does not compile a real Svelte or SvelteKit app.
+
 We should only add framework package smoke when it is both realistic and low-maintenance.
 
 ## What a future smoke must prove
@@ -24,7 +26,7 @@ Before creating a heavyweight Angular package or broadening Svelte beyond the cu
 Keep the future smoke close to how users would actually consume the package:
 
 - scaffold a tiny Angular app
-- scaffold a tiny Svelte or SvelteKit app only if the current helper surface needs framework-compiler proof
+- scaffold a tiny Svelte or SvelteKit app before a public npm release if the adapter is promoted from in-repo candidate to stable published package
 - install the packed adapter tarball plus the core package where relevant
 - render one preview instance
 - verify the app builds and the integration code covers client-only registration, property passing, and event hookup

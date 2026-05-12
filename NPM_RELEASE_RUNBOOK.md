@@ -68,6 +68,7 @@ Additional expected result:
 
 - the Svelte package build passes
 - the Svelte adapter contract test passes
+- `pnpm smoke:consumer` proves the packed Svelte import and action behavior; add a tiny Svelte/Vite compile smoke before public publish if framework-compiler proof is required for the release.
 
 Confirm npm identity:
 
