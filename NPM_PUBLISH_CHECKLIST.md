@@ -17,6 +17,7 @@ For the actual first-release command sequence, use [NPM_RELEASE_RUNBOOK.md](NPM_
 - `@ko1265/file-preview-kit-react`
 - `@ko1265/file-preview-kit-vue`
 - Status: validated in-repo for release readiness, but not yet recorded here as a public npm publish.
+- React/Vue release-prep dry-run evidence is recorded in [NPM_ADAPTER_RELEASE_PREP.md](NPM_ADAPTER_RELEASE_PREP.md).
 
 ## Already Verified
 
