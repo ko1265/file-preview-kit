@@ -28,7 +28,9 @@ describe("adapter release prep", () => {
     expect(releasePrep).not.toContain("@ko1265/file-preview-kit-svelte");
 
     expect(publishChecklist).toContain("NPM_ADAPTER_RELEASE_PREP.md");
-    expect(publishChecklist).toContain("Do not list `@ko1265/file-preview-kit-react` or `@ko1265/file-preview-kit-vue`");
+    expect(publishChecklist).toContain(
+      "Do not list `@ko1265/file-preview-kit-react`, `@ko1265/file-preview-kit-vue`, or `@ko1265/file-preview-kit-svelte`"
+    );
     expect(runbook).toContain("If the release includes React, verify the adapter import and minimal render path:");
     expect(runbook).toContain("If the release includes Vue, verify the adapter import and minimal render path:");
   });
