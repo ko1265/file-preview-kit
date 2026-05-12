@@ -5,9 +5,9 @@ This directory holds a minimal external-consumer smoke test for the first npm re
 The workflow validates packed package artifacts rather than source-path imports:
 
 1. build the publishable workspace packages
-2. pack `@ko1265/file-preview-kit-shared`, `@ko1265/file-preview-kit-core`, and `@ko1265/file-preview-kit-web-components`
+2. pack `@ko1265/file-preview-kit-shared`, `@ko1265/file-preview-kit-core`, `@ko1265/file-preview-kit-web-components`, `@ko1265/file-preview-kit-react`, and any optional framework adapter package present in the workspace
 3. install those tarballs into a clean sample app under `.workspace/consumer-app`
-4. verify that the sample app can import and minimally use the installed packages
+4. verify that the sample app can import and minimally use the installed packages, including framework adapters
 
 Run it from the repository root:
 

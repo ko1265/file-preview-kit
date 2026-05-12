@@ -37,6 +37,12 @@
 - `@ko1265/file-preview-kit-shared`：共享预览协议与类型
 - `@ko1265/file-preview-kit-core`：归一化、插件注册表、服务层和内置插件
 - `@ko1265/file-preview-kit-web-components`：`file-preview` 自定义元素
+- `@ko1265/file-preview-kit-react`：仓库内的 v2.0 React 适配候选包
+- `@ko1265/file-preview-kit-vue`：仓库内的 v2.0 Vue 适配候选包
+
+React 和 Vue 适配包只有在完成真实 npm 发布与 registry 验证之后，才会列为已发布 npm 包。
+
+Angular 和 Svelte 当前是基于 Web Component 的文档化接入路径，还不是独立适配包。见 [Framework Integration Notes](docs/frameworks/README.md)。
 
 ## 安装
 
@@ -233,7 +239,7 @@ pnpm pack:verify
 pnpm smoke:consumer
 ```
 
-`pnpm smoke:consumer` 会构建可发布包、打本地 tarball、安装到一个干净 sample app 里，并验证外部消费者能导入 `@ko1265/file-preview-kit-core` 和 `@ko1265/file-preview-kit-web-components`。
+`pnpm smoke:consumer` 会构建可发布包、打本地 tarball、安装到一个干净 sample app 里，并在适配包纳入当前范围时验证外部消费者能导入 core、Web Component 和本地适配包公开入口。
 
 ## 发布状态
 

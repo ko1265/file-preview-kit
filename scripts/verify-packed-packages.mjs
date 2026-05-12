@@ -1,3 +1,4 @@
+import { existsSync } from "node:fs";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 
@@ -28,8 +29,31 @@ const packages = [
       "@ko1265/file-preview-kit-core": version,
       "@ko1265/file-preview-kit-shared": version
     }
+  },
+  {
+    name: "@ko1265/file-preview-kit-react",
+    dir: "packages/react",
+    tarball: `ko1265-file-preview-kit-react-${version}.tgz`,
+    internalDependencies: {
+      "@ko1265/file-preview-kit-core": version,
+      "@ko1265/file-preview-kit-shared": version,
+      "@ko1265/file-preview-kit-web-components": version
+    }
   }
 ];
+
+if (existsSync(path.join(repoRoot, "packages", "vue"))) {
+  packages.push({
+    name: "@ko1265/file-preview-kit-vue",
+    dir: "packages/vue",
+    tarball: `ko1265-file-preview-kit-vue-${version}.tgz`,
+    internalDependencies: {
+      "@ko1265/file-preview-kit-core": version,
+      "@ko1265/file-preview-kit-shared": version,
+      "@ko1265/file-preview-kit-web-components": version
+    }
+  });
+}
 
 function readTarEntries(buffer) {
   const entries = new Map();

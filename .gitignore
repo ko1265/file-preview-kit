@@ -4,7 +4,6 @@ coverage
 .turbo
 .vite
 *.tsbuildinfo
-pnpm-lock.yaml
 .DS_Store
 *.tgz
 artifacts/
@@ -17,6 +16,7 @@ apps/demo/vite.config.d.ts.map
 AGENT_STATUS.md
 STATUS.md
 KANBAN.md
+AUTONOMOUS_WORKFLOW.md
 AGENT_HANDOFF.md
 .pnpm-store/
 smoke/consumer-smoke/.artifacts/

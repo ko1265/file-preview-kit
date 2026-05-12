@@ -1,11 +1,14 @@
 import { spawn } from "node:child_process";
+import { existsSync } from "node:fs";
 import { cp, mkdir, readFile, readdir, rm, writeFile } from "node:fs/promises";
 import path from "node:path";
+import { createRequire } from "node:module";
 import { fileURLToPath } from "node:url";
 import { gunzipSync } from "node:zlib";
 
 const scriptDir = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(scriptDir, "..");
+const require = createRequire(import.meta.url);
 const smokeRoot = path.join(repoRoot, "smoke", "consumer-smoke");
 const templateDir = path.join(smokeRoot, "template");
 const artifactsDir = path.join(smokeRoot, ".artifacts");
@@ -30,8 +33,25 @@ const publishablePackages = [
   {
     name: "@ko1265/file-preview-kit-web-components",
     dir: path.join(repoRoot, "packages", "web-components")
+  },
+  {
+    name: "@ko1265/file-preview-kit-react",
+    dir: path.join(repoRoot, "packages", "react")
   }
 ];
+
+const optionalPublishablePackages = [
+  {
+    name: "@ko1265/file-preview-kit-vue",
+    dir: path.join(repoRoot, "packages", "vue")
+  }
+];
+
+for (const pkg of optionalPublishablePackages) {
+  if (existsSync(pkg.dir)) {
+    publishablePackages.push(pkg);
+  }
+}
 
 function isInsideSmokeRoot(targetPath) {
   const relative = path.relative(smokeRoot, targetPath);
@@ -81,18 +101,28 @@ async function packPackage(pkg) {
 }
 
 async function buildPublishablePackages() {
+  const buildTargets = [
+    "packages/shared/tsconfig.json",
+    "packages/core/tsconfig.json",
+    "packages/web-components/tsconfig.json",
+    "packages/react/tsconfig.json"
+  ];
+  const distDirs = ["packages/core/dist", "packages/web-components/dist", "packages/react/dist"];
+
+  if (existsSync(path.join(repoRoot, "packages", "vue", "tsconfig.json"))) {
+    buildTargets.push("packages/vue/tsconfig.json");
+    distDirs.push("packages/vue/dist");
+  }
+
   await run(
     tscCommand,
-    [
-      "-b",
-      "packages/shared/tsconfig.json",
-      "packages/core/tsconfig.json",
-      "packages/web-components/tsconfig.json"
-    ],
+    ["-b", ...buildTargets],
     repoRoot
   );
-  await run("node", ["./scripts/fix-relative-esm-extensions.mjs", "packages/core/dist"], repoRoot);
-  await run("node", ["./scripts/fix-relative-esm-extensions.mjs", "packages/web-components/dist"], repoRoot);
+
+  for (const distDir of distDirs) {
+    await run("node", ["./scripts/fix-relative-esm-extensions.mjs", distDir], repoRoot);
+  }
 }
 
 function normalizeForPackageJson(value) {
@@ -178,6 +208,88 @@ async function installPackedTarballs(tarballs) {
   }
 }
 
+const copiedPeerPackages = new Set();
+
+async function resolvePackageJsonPath(packageName, fromDir) {
+  let searchDir = fromDir;
+
+  while (searchDir !== path.dirname(searchDir)) {
+    const candidate = path.join(searchDir, "node_modules", packageName, "package.json");
+
+    if (existsSync(candidate)) {
+      return candidate;
+    }
+
+    searchDir = path.dirname(searchDir);
+  }
+
+  try {
+    return require.resolve(`${packageName}/package.json`, { paths: [fromDir] });
+  } catch {
+    // Some packages hide package.json behind exports; resolve the entrypoint below.
+  }
+
+  const pnpmStoreDir = path.join(repoRoot, "node_modules", ".pnpm");
+  if (existsSync(pnpmStoreDir)) {
+    for (const entry of await readdir(pnpmStoreDir)) {
+      const candidate = path.join(pnpmStoreDir, entry, "node_modules", packageName, "package.json");
+
+      if (!existsSync(candidate)) {
+        continue;
+      }
+
+      const packageJson = JSON.parse(await readFile(candidate, "utf8"));
+      if (packageJson.name === packageName) {
+        return candidate;
+      }
+    }
+  }
+
+  let currentDir = path.dirname(require.resolve(packageName, { paths: [fromDir] }));
+
+  while (currentDir !== path.dirname(currentDir)) {
+    const candidate = path.join(currentDir, "package.json");
+
+    if (existsSync(candidate)) {
+      const packageJson = JSON.parse(await readFile(candidate, "utf8"));
+      if (packageJson.name === packageName) {
+        return candidate;
+      }
+    }
+
+    currentDir = path.dirname(currentDir);
+  }
+
+  throw new Error(`Unable to resolve package root for ${packageName}`);
+}
+
+async function installPeerPackage(packageName, fromDir) {
+  if (copiedPeerPackages.has(packageName)) {
+    return;
+  }
+  copiedPeerPackages.add(packageName);
+
+  const packageJsonPath = await resolvePackageJsonPath(packageName, fromDir);
+  const sourceDir = path.dirname(packageJsonPath);
+  const targetDir = path.join(workspaceDir, "node_modules", packageName);
+  const packageJson = JSON.parse(await readFile(packageJsonPath, "utf8"));
+
+  await mkdir(path.dirname(targetDir), { recursive: true });
+  await cp(sourceDir, targetDir, { dereference: true, recursive: true });
+
+  for (const dependencyName of Object.keys(packageJson.dependencies ?? {})) {
+    await installPeerPackage(dependencyName, sourceDir);
+  }
+}
+
+async function installReactPeer() {
+  await installPeerPackage("react", path.join(repoRoot, "packages", "react"));
+}
+
+async function installVuePeer() {
+  await installPeerPackage("vue", path.join(repoRoot, "packages", "vue"));
+}
+
 async function main() {
   console.log("==> Building publishable packages");
   await buildPublishablePackages();
@@ -201,6 +313,10 @@ async function main() {
 
   console.log("==> Materializing packed tarballs into clean consumer app");
   await installPackedTarballs(tarballs);
+  await installReactPeer();
+  if (publishablePackages.some((pkg) => pkg.name === "@ko1265/file-preview-kit-vue")) {
+    await installVuePeer();
+  }
 
   console.log("==> Verifying consumer imports and minimal usage");
   await run("node", ["./verify-consumer.mjs"], workspaceDir);

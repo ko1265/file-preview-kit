@@ -1,0 +1,47 @@
+{
+  "name": "@ko1265/file-preview-kit-vue",
+  "version": "1.0.0",
+  "description": "Vue adapter for file-preview-kit.",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ko1265/file-preview-kit.git",
+    "directory": "packages/vue"
+  },
+  "bugs": {
+    "url": "https://github.com/ko1265/file-preview-kit/issues"
+  },
+  "homepage": "https://github.com/ko1265/file-preview-kit/tree/main/packages/vue",
+  "type": "module",
+  "sideEffects": false,
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": ["dist", "README.md"],
+  "dependencies": {
+    "@ko1265/file-preview-kit-core": "workspace:*",
+    "@ko1265/file-preview-kit-shared": "workspace:*",
+    "@ko1265/file-preview-kit-web-components": "workspace:*"
+  },
+  "peerDependencies": {
+    "vue": ">=3.4.0 <4"
+  },
+  "devDependencies": {
+    "vue": "^3.5.13"
+  },
+  "keywords": ["file-preview", "vue", "web-components", "frontend"],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsc -b && node ../../scripts/fix-relative-esm-extensions.mjs dist",
+    "clean": "node -e \"Promise.all([import('node:fs/promises').then(({ rm }) => rm('dist', { recursive: true, force: true })), import('node:fs/promises').then(({ rm }) => rm('tsconfig.tsbuildinfo', { force: true }))]).catch(() => {})\"",
+    "lint": "tsc --noEmit"
+  }
+}

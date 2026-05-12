@@ -1,3 +1,5 @@
+import { existsSync } from "node:fs";
+import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 
 describe("package entrypoints", () => {
@@ -11,5 +13,16 @@ describe("package entrypoints", () => {
 
   it("import the built web-components entrypoint without module resolution errors", async () => {
     await expect(import("../packages/web-components/dist/index.js")).resolves.toBeTruthy();
+  });
+
+  it("import the built react entrypoint without module resolution errors", async () => {
+    await expect(import("../packages/react/dist/index.js")).resolves.toBeTruthy();
+  });
+
+  const vueEntrypointExists = existsSync(resolve("packages/vue/dist/index.js"));
+  const itVueEntrypoint = vueEntrypointExists ? it : it.skip;
+
+  itVueEntrypoint("import the built vue entrypoint without module resolution errors", async () => {
+    await expect(import("../packages/vue/dist/index.js")).resolves.toBeTruthy();
   });
 });

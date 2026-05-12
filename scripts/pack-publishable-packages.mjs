@@ -1,3 +1,4 @@
+import { existsSync } from "node:fs";
 import { spawn } from "node:child_process";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -9,8 +10,17 @@ const pnpmCommand = process.platform === "win32" ? "pnpm.cmd" : "pnpm";
 const publishablePackages = [
   join(repoRoot, "packages", "shared"),
   join(repoRoot, "packages", "core"),
-  join(repoRoot, "packages", "web-components")
+  join(repoRoot, "packages", "web-components"),
+  join(repoRoot, "packages", "react")
 ];
+
+const optionalPublishablePackages = [join(repoRoot, "packages", "vue")];
+
+for (const packageDir of optionalPublishablePackages) {
+  if (existsSync(packageDir)) {
+    publishablePackages.push(packageDir);
+  }
+}
 
 await main();
 
