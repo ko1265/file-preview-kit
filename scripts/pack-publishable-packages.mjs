@@ -14,7 +14,10 @@ const publishablePackages = [
   join(repoRoot, "packages", "react")
 ];
 
-const optionalPublishablePackages = [join(repoRoot, "packages", "vue")];
+const optionalPublishablePackages = [
+  join(repoRoot, "packages", "vue"),
+  join(repoRoot, "packages", "svelte")
+];
 
 for (const packageDir of optionalPublishablePackages) {
   if (existsSync(packageDir)) {

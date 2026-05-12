@@ -25,4 +25,11 @@ describe("package entrypoints", () => {
   itVueEntrypoint("import the built vue entrypoint without module resolution errors", async () => {
     await expect(import("../packages/vue/dist/index.js")).resolves.toBeTruthy();
   });
+
+  const svelteEntrypointExists = existsSync(resolve("packages/svelte/dist/index.js"));
+  const itSvelteEntrypoint = svelteEntrypointExists ? it : it.skip;
+
+  itSvelteEntrypoint("import the built svelte entrypoint without module resolution errors", async () => {
+    await expect(import("../packages/svelte/dist/index.js")).resolves.toBeTruthy();
+  });
 });

@@ -39,10 +39,11 @@ If your product needs stable remote preview, plan for a controlled file distribu
 - `@ko1265/file-preview-kit-web-components`: the `file-preview` custom element
 - `@ko1265/file-preview-kit-react`: in-repo React adapter candidate for v2.0 framework integration
 - `@ko1265/file-preview-kit-vue`: in-repo Vue adapter candidate for v2.0 framework integration
+- `@ko1265/file-preview-kit-svelte`: in-repo Svelte action adapter candidate for v2.0 framework integration
 
-The React and Vue adapters are not listed as published npm packages until a real adapter publish and registry verification are complete.
+The React, Vue, and Svelte adapters are not listed as published npm packages until a real adapter publish and registry verification are complete.
 
-Angular and Svelte are currently documented Web Component integration paths, not adapter packages. See [Framework Integration Notes](docs/frameworks/README.md).
+Angular is currently a documented Web Component integration path, not an adapter package. See [Framework Integration Notes](docs/frameworks/README.md).
 
 ## Install
 

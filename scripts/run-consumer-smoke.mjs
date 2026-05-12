@@ -44,6 +44,10 @@ const optionalPublishablePackages = [
   {
     name: "@ko1265/file-preview-kit-vue",
     dir: path.join(repoRoot, "packages", "vue")
+  },
+  {
+    name: "@ko1265/file-preview-kit-svelte",
+    dir: path.join(repoRoot, "packages", "svelte")
   }
 ];
 
@@ -112,6 +116,11 @@ async function buildPublishablePackages() {
   if (existsSync(path.join(repoRoot, "packages", "vue", "tsconfig.json"))) {
     buildTargets.push("packages/vue/tsconfig.json");
     distDirs.push("packages/vue/dist");
+  }
+
+  if (existsSync(path.join(repoRoot, "packages", "svelte", "tsconfig.json"))) {
+    buildTargets.push("packages/svelte/tsconfig.json");
+    distDirs.push("packages/svelte/dist");
   }
 
   await run(

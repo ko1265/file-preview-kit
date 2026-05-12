@@ -4,13 +4,13 @@
 
 Do not add a heavyweight Angular or Svelte package smoke yet.
 
-Right now there is no `@ko1265/file-preview-kit-angular` or `@ko1265/file-preview-kit-svelte` package to prove. The current docs describe direct use of `@ko1265/file-preview-kit-web-components`, so a full framework-app smoke in this PR would mostly test scaffold tooling and example wiring rather than a real adapter surface.
+`@ko1265/file-preview-kit-angular` still does not exist, and `@ko1265/file-preview-kit-svelte` is intentionally just a thin action/helper package. A full scaffolded Angular or Svelte app smoke in this PR would mostly test framework tooling churn rather than meaningful adapter behavior.
 
 We should only add framework package smoke when it is both realistic and low-maintenance.
 
 ## What a future smoke must prove
 
-Before creating `@ko1265/file-preview-kit-angular` or `@ko1265/file-preview-kit-svelte`, the smoke should prove all of the following:
+Before creating a heavyweight Angular package or broadening Svelte beyond the current thin helper, the smoke should prove all of the following:
 
 - The package exposes a small, documented integration surface that is different enough from direct Web Component usage to justify its own package.
 - A fresh consumer app can install the packed adapter and compile without manual patching.
@@ -24,8 +24,8 @@ Before creating `@ko1265/file-preview-kit-angular` or `@ko1265/file-preview-kit-
 Keep the future smoke close to how users would actually consume the package:
 
 - scaffold a tiny Angular app
-- scaffold a tiny Svelte or SvelteKit app
-- install the packed adapter tarball plus the core package
+- scaffold a tiny Svelte or SvelteKit app only if the current helper surface needs framework-compiler proof
+- install the packed adapter tarball plus the core package where relevant
 - render one preview instance
 - verify the app builds and the integration code covers client-only registration, property passing, and event hookup
 
@@ -39,8 +39,8 @@ pnpm add /path/to/ko1265-file-preview-kit-svelte.tgz @ko1265/file-preview-kit-co
 pnpm build
 ```
 
-These are examples only. This PR does not add scripts, dependencies, or package-level smoke automation.
+These are examples only. This PR still does not add scaffold-based Angular or Svelte smoke automation.
 
 ## Trigger to revisit
 
-Revisit this once an Angular or Svelte adapter package exists, has a stable API, and can be validated with one small consumer per framework without turning CI into framework-scaffold maintenance.
+Revisit this once an Angular package exists, or once the Svelte helper grows enough surface that a real Svelte consumer compile gives us signal we cannot get from the current packed-package smoke.

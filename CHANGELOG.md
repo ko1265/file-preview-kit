@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+### v2.0 Svelte action adapter milestone
+
+- Added the `@ko1265/file-preview-kit-svelte` action adapter package as a lightweight v2.0 framework milestone on top of the existing Web Component surface.
+- Added a `filePreview` Svelte action that registers the custom element on the client, maps `src`, `fileName`, and `mimeType` to attributes, maps `requestConfig` and `previewService` to DOM properties, and forwards preview lifecycle events to callbacks.
+- Added Svelte-focused package documentation, including SvelteKit client-only guidance.
+- Kept Angular deferred to the documented Web Component path until a real Angular directive/component package is justified.
+
 ### v2.0 Vue adapter milestone
 
 - Added the `@ko1265/file-preview-kit-vue` adapter package as the second v2.0 framework milestone on top of the existing browser-only preview baseline.
