@@ -10,7 +10,8 @@ The v2.0 direction is framework adapters on top of the existing browser-only pre
 
 - React first
 - Vue second
-- Angular and Svelte through integration docs/smoke examples before committing to full packages
+- Svelte through a lightweight action/helper if it removes Web Component boilerplate without adding a compiler scaffold
+- Angular through integration docs/smoke examples before committing to a full Angular Package Format package
 
 ## Non-Negotiables
 
@@ -26,8 +27,8 @@ Use separate framework packages:
 
 - `@ko1265/file-preview-kit-react`
 - `@ko1265/file-preview-kit-vue`
+- `@ko1265/file-preview-kit-svelte` as a thin action/helper package once its wrapper proves smaller than repeated `onMount` boilerplate
 - `@ko1265/file-preview-kit-angular` only after Angular demand is proven
-- `@ko1265/file-preview-kit-svelte` only after Svelte demand is proven
 
 The main package story should stay explicit: users install the package for their framework instead of pulling a mixed all-framework bundle.
 
@@ -87,7 +88,7 @@ Exit criteria:
 
 ### M3: Framework Integration Examples
 
-Status: in progress.
+Status: complete for docs-first Angular/Svelte paths.
 
 Deliverables:
 
@@ -99,7 +100,39 @@ Exit criteria:
 
 - Angular and Svelte users have a reliable documented path before full adapter package work begins.
 
-### M4: Release Readiness
+### M4: Svelte Lightweight Adapter
+
+Status: in progress.
+
+Deliverables:
+
+- `packages/svelte`
+- Svelte action/helper that registers the Web Component on the client
+- attribute mapping for `src`, `fileName`, and `mimeType`
+- DOM property mapping for `requestConfig` and `previewService`
+- callback mapping for `file-preview:loadstart`, `file-preview:load`, and `file-preview:error`
+- Svelte/SvelteKit README with client-only guidance
+- focused contract and consumer smoke coverage
+
+Exit criteria:
+
+- Svelte users can avoid repeated `onMount` registration, DOM property, and event boilerplate without pulling in a Svelte compiler scaffold.
+
+### M5: Angular Package Decision
+
+Status: deferred.
+
+Deliverables:
+
+- Keep the Angular Web Component guide current.
+- Do not add `packages/angular` until a real Angular directive/component package is justified.
+- If promoted, use Angular's package conventions instead of a fake plain-TS wrapper.
+
+Exit criteria:
+
+- Angular remains documented and usable through the Web Component path, or a future package has enough value to justify Angular-specific tooling.
+
+### M6: Release Readiness
 
 Deliverables:
 

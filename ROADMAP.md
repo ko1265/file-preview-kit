@@ -27,10 +27,13 @@ The project has completed its `v1.0` closeout for the current browser-only previ
 3. Vue adapter second
    - Add a thin Vue wrapper only after React establishes the adapter boundary.
    - Focus on props, emits, typing, and avoiding custom-element boilerplate.
-4. Angular and Svelte integration paths
-   - Start with docs and consumer smoke examples.
-   - Defer full packages until real demand or integration friction justifies the maintenance cost.
-5. Release hygiene
+4. Svelte lightweight adapter
+   - Promote Svelte only as a thin action/helper package because it removes repeated `onMount`, DOM property, and event boilerplate.
+   - Avoid a Svelte compiler scaffold unless a later component package truly needs it.
+5. Angular integration path
+   - Keep Angular on the Web Component guide until real demand justifies Angular Package Format tooling.
+   - Do not add a placeholder Angular package just to mirror React/Vue/Svelte.
+6. Release hygiene
    - Keep build, test, tarball verification, and consumer smoke paths green for every publishable package.
    - Keep English and Chinese docs synchronized with the actual package story.
 
@@ -38,8 +41,8 @@ The project has completed its `v1.0` closeout for the current browser-only previ
 
 - `@ko1265/file-preview-kit-react`: first full adapter package.
 - `@ko1265/file-preview-kit-vue`: second adapter package after React.
+- `@ko1265/file-preview-kit-svelte`: promoted only as a lightweight action/helper package.
 - `@ko1265/file-preview-kit-angular`: deferred until docs/smoke examples prove package value.
-- `@ko1265/file-preview-kit-svelte`: deferred until docs/smoke examples prove package value.
 
 See [V2_DEVELOPMENT_PLAN.md](V2_DEVELOPMENT_PLAN.md) for the active milestone plan.
 

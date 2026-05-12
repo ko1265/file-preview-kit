@@ -5,6 +5,7 @@ const elementRegistry = new Map();
 const consumerPackageJson = JSON.parse(await readFile(new URL("./package.json", import.meta.url), "utf8"));
 const consumerDependencies = consumerPackageJson.dependencies ?? {};
 const hasVueAdapter = "@ko1265/file-preview-kit-vue" in consumerDependencies;
+const hasSvelteAdapter = "@ko1265/file-preview-kit-svelte" in consumerDependencies;
 
 globalThis.HTMLElement = class HTMLElement {
   attachShadow() {
@@ -109,6 +110,73 @@ if (hasVueAdapter) {
   });
 
   assert.equal(vnode.type, vueAdapter.FilePreview, "Vue adapter should be consumable through Vue.h");
+}
+
+if (hasSvelteAdapter) {
+  const svelteAdapter = await import("@ko1265/file-preview-kit-svelte");
+
+  await svelteAdapter.ensureFilePreviewElementRegistered();
+  assert.equal(
+    globalThis.customElements.get("file-preview"),
+    FilePreviewElement,
+    "Svelte adapter should register the default custom element"
+  );
+
+  const appliedAttributes = new Map();
+  const listeners = new Map();
+  const svelteNode = {
+    requestConfig: undefined,
+    previewService: undefined,
+    addEventListener(type, listener) {
+      listeners.set(type, listener);
+    },
+    removeEventListener(type, listener) {
+      if (listeners.get(type) === listener) {
+        listeners.delete(type);
+      }
+    },
+    getAttribute(name) {
+      return appliedAttributes.get(name) ?? null;
+    },
+    hasAttribute(name) {
+      return appliedAttributes.has(name);
+    },
+    setAttribute(name, value) {
+      appliedAttributes.set(name, value);
+    },
+    removeAttribute(name) {
+      appliedAttributes.delete(name);
+    }
+  };
+
+  let loadCount = 0;
+  const action = svelteAdapter.filePreview(svelteNode, {
+    src: "https://consumer.example/files/readme.md",
+    fileName: "readme.md",
+    requestConfig: {
+      headers: {
+        "X-Smoke": "svelte"
+      }
+    },
+    onLoad() {
+      loadCount += 1;
+    }
+  });
+
+  await Promise.resolve();
+
+  assert.equal(
+    appliedAttributes.get("src"),
+    "https://consumer.example/files/readme.md",
+    "Svelte action should map src to an attribute"
+  );
+  assert.equal(svelteNode.requestConfig.headers["X-Smoke"], "svelte");
+
+  listeners.get("file-preview:load")?.({ type: "file-preview:load" });
+  assert.equal(loadCount, 1, "Svelte action should map load events to callbacks");
+
+  action.destroy();
+  assert.equal(listeners.size, 0, "Svelte action should clean up event listeners");
 }
 
 console.log("consumer smoke verified");

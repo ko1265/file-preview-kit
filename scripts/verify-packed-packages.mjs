@@ -55,6 +55,19 @@ if (existsSync(path.join(repoRoot, "packages", "vue"))) {
   });
 }
 
+if (existsSync(path.join(repoRoot, "packages", "svelte"))) {
+  packages.push({
+    name: "@ko1265/file-preview-kit-svelte",
+    dir: "packages/svelte",
+    tarball: `ko1265-file-preview-kit-svelte-${version}.tgz`,
+    internalDependencies: {
+      "@ko1265/file-preview-kit-core": version,
+      "@ko1265/file-preview-kit-shared": version,
+      "@ko1265/file-preview-kit-web-components": version
+    }
+  });
+}
+
 function readTarEntries(buffer) {
   const entries = new Map();
   let offset = 0;

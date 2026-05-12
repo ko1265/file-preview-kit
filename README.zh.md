@@ -39,10 +39,11 @@
 - `@ko1265/file-preview-kit-web-components`：`file-preview` 自定义元素
 - `@ko1265/file-preview-kit-react`：仓库内的 v2.0 React 适配候选包
 - `@ko1265/file-preview-kit-vue`：仓库内的 v2.0 Vue 适配候选包
+- `@ko1265/file-preview-kit-svelte`：仓库内的 v2.0 Svelte action 适配候选包
 
-React 和 Vue 适配包只有在完成真实 npm 发布与 registry 验证之后，才会列为已发布 npm 包。
+React、Vue 和 Svelte 适配包只有在完成真实 npm 发布与 registry 验证之后，才会列为已发布 npm 包。
 
-Angular 和 Svelte 当前是基于 Web Component 的文档化接入路径，还不是独立适配包。见 [Framework Integration Notes](docs/frameworks/README.md)。
+Angular 当前仍是基于 Web Component 的文档化接入路径，还不是独立适配包。见 [Framework Integration Notes](docs/frameworks/README.md)。
 
 ## 安装
 

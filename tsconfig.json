@@ -5,6 +5,7 @@
     { "path": "./packages/core" },
     { "path": "./packages/web-components" },
     { "path": "./packages/react" },
+    { "path": "./packages/svelte" },
     { "path": "./packages/vue" },
     { "path": "./apps/demo" }
   ]

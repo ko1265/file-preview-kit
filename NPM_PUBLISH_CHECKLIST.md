@@ -16,6 +16,7 @@ For the actual first-release command sequence, use [NPM_RELEASE_RUNBOOK.md](NPM_
 
 - `@ko1265/file-preview-kit-react`
 - `@ko1265/file-preview-kit-vue`
+- `@ko1265/file-preview-kit-svelte`
 - Status: validated in-repo for release readiness, but not yet recorded here as a public npm publish.
 
 ## Already Verified
@@ -32,22 +33,24 @@ For the actual first-release command sequence, use [NPM_RELEASE_RUNBOOK.md](NPM_
   - `publishConfig.access = public`
 - `pnpm pack:check` succeeds for all publishable packages, including `@ko1265/file-preview-kit-react`.
 - `pnpm pack:check` is expected to include `@ko1265/file-preview-kit-vue` automatically when `packages/vue` is present.
+- `pnpm pack:check` is expected to include `@ko1265/file-preview-kit-svelte` automatically when `packages/svelte` is present.
 - Packed tarballs rewrite internal workspace dependencies correctly:
   - `@ko1265/file-preview-kit-core` depends on `@ko1265/file-preview-kit-shared` at the current workspace version
   - `@ko1265/file-preview-kit-web-components` depends on `@ko1265/file-preview-kit-core` and `@ko1265/file-preview-kit-shared` at the current workspace version
   - `@ko1265/file-preview-kit-react` depends on `@ko1265/file-preview-kit-core`, `@ko1265/file-preview-kit-shared`, and `@ko1265/file-preview-kit-web-components` at the current workspace version
   - `@ko1265/file-preview-kit-vue` should depend on `@ko1265/file-preview-kit-core`, `@ko1265/file-preview-kit-shared`, and `@ko1265/file-preview-kit-web-components` at the current workspace version when it joins the publishable set
+  - `@ko1265/file-preview-kit-svelte` should depend on `@ko1265/file-preview-kit-core`, `@ko1265/file-preview-kit-shared`, and `@ko1265/file-preview-kit-web-components` at the current workspace version when it joins the publishable set
 - The published packages are intentionally scoped as `@ko1265/*`; the root workspace package stays private and is not part of the npm release surface.
 - Package-level READMEs now include the remote file access/CORS guidance that matters for real adopters.
 - The repository now includes a repeatable consumer smoke test at `pnpm smoke:consumer` that:
   - packs the local publishable packages
   - installs those tarballs into a clean sample app
-  - verifies that a consumer can import `@ko1265/file-preview-kit-core`, `@ko1265/file-preview-kit-web-components`, `@ko1265/file-preview-kit-react`, and `@ko1265/file-preview-kit-vue` when those adapter packages are in scope
+  - verifies that a consumer can import `@ko1265/file-preview-kit-core`, `@ko1265/file-preview-kit-web-components`, `@ko1265/file-preview-kit-react`, `@ko1265/file-preview-kit-vue`, and `@ko1265/file-preview-kit-svelte` when those adapter packages are in scope
 - `pnpm pack:verify` now checks the packed tarballs for:
   - expected entrypoint files from `main` / `module` / `types` / `exports`
   - `README.md` and `LICENSE`
   - internal workspace dependency rewrite to the publish version
-  - React and Vue adapter tarball coverage when those packages are in scope for release
+  - React, Vue, and Svelte adapter tarball coverage when those packages are in scope for release
 
 ## First Release Outcome
 
@@ -97,7 +100,13 @@ For the actual first-release command sequence, use [NPM_RELEASE_RUNBOOK.md](NPM_
    - `pnpm vitest run tests/vue-adapter-contract.test.ts`
    - `pnpm pack:verify`
    - `pnpm smoke:consumer`
-6. Do not list `@ko1265/file-preview-kit-react` or `@ko1265/file-preview-kit-vue` under "Published Packages" here until a real npm publish and post-publish verification are complete.
+6. If a future v2.0 release adds `@ko1265/file-preview-kit-svelte`, publish it after `web-components` and keep its release signoff tied to:
+   - `pnpm --filter @ko1265/file-preview-kit-svelte build`
+   - `pnpm vitest run tests/svelte-adapter-contract.test.ts`
+   - `pnpm pack:verify`
+   - `pnpm smoke:consumer`
+   - confirm whether a tiny Svelte/Vite compile smoke is required before public publish; the current consumer smoke only proves packed import plus action behavior
+7. Do not list `@ko1265/file-preview-kit-react`, `@ko1265/file-preview-kit-vue`, or `@ko1265/file-preview-kit-svelte` under "Published Packages" here until a real npm publish and post-publish verification are complete.
 
 ## Published Packages
 
@@ -105,7 +114,7 @@ For the actual first-release command sequence, use [NPM_RELEASE_RUNBOOK.md](NPM_
 - `@ko1265/file-preview-kit-core@0.1.0`
 - `@ko1265/file-preview-kit-web-components@0.1.0`
 
-React and Vue adapters remain intentionally absent from this list until actual public npm releases happen.
+React, Vue, and Svelte adapters remain intentionally absent from this list until actual public npm releases happen.
 
 ## Notes
 

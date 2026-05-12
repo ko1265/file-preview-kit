@@ -1,22 +1,66 @@
 # Svelte and SvelteKit
 
-Use `@ko1265/file-preview-kit-web-components` directly for now. There is no Svelte or SvelteKit adapter package yet.
+Use `@ko1265/file-preview-kit-svelte` when you want the lightweight action adapter. It wraps the existing `file-preview` Web Component registration, DOM property assignment, and lifecycle event wiring without adding a Svelte compiler scaffold.
+
+`@ko1265/file-preview-kit-svelte` is currently an in-repo v2.0 adapter candidate. It is not published to npm yet, so the install command below is for the future public package release, not for the current registry state.
+
+You can still use `@ko1265/file-preview-kit-web-components` directly when you want full manual control.
 
 ## Install
+
+After the package is published to npm:
+
+```bash
+pnpm add @ko1265/file-preview-kit-svelte
+```
+
+For current repository testing, use the packed local tarball produced by `pnpm pack:verify` or `pnpm smoke:consumer`.
+
+For direct Web Component usage or a custom `FilePreviewService`, install:
 
 ```bash
 pnpm add @ko1265/file-preview-kit-web-components @ko1265/file-preview-kit-core
 ```
 
-`@ko1265/file-preview-kit-core` is only needed if you want to create a custom `FilePreviewService`.
-
 ## Browser-only boundary
 
 - `@ko1265/file-preview-kit-web-components` is browser-only.
-- In plain Svelte, register the element in `onMount`.
-- In SvelteKit, keep registration and DOM access on the client. `onMount` is the simplest boundary.
+- The Svelte adapter does not touch `window` at module evaluation time.
+- In plain Svelte, the `filePreview` action handles registration for you on the client.
+- In direct Web Component usage, register the element in `onMount`.
+- In SvelteKit, keep rendered preview usage on the client and use an explicit `if (!browser)` guard when you move setup into lifecycle code.
 
-## Svelte example
+## Svelte action example
+
+```svelte
+<script lang="ts">
+  import { filePreview } from "@ko1265/file-preview-kit-svelte";
+
+  const previewOptions = {
+    src: "/private/report.pdf",
+    fileName: "report.pdf",
+    mimeType: "application/pdf",
+    requestConfig: {
+      credentials: "include" as const,
+      headers: {
+        "X-Document-Scope": "private"
+      }
+    },
+    onLoad() {
+      console.log("preview loaded");
+    },
+    onError(event) {
+      console.error("preview failed", event.detail);
+    }
+  };
+</script>
+
+<file-preview use:filePreview={previewOptions}></file-preview>
+```
+
+## Direct Web Component example
+
+If you want full manual control, you can still use the custom element directly:
 
 ```svelte
 <script lang="ts">
@@ -97,57 +141,35 @@ The cleanup must be returned synchronously from `onMount`; do not make the `onMo
 
 ## SvelteKit example
 
-This pattern keeps the browser-only code inside `onMount` and leaves the rest of the route SSR-safe.
+This pattern keeps the route SSR-safe while only rendering the preview on the client.
 
 ```svelte
 <script lang="ts">
   import { browser } from "$app/environment";
-  import { onMount } from "svelte";
+  import { filePreview } from "@ko1265/file-preview-kit-svelte";
 
-  let preview: HTMLElement;
-
-  onMount(() => {
-    if (!browser) {
-      return;
-    }
-
-    let removeListeners: (() => void) | undefined;
-    let disposed = false;
-
-    void import("@ko1265/file-preview-kit-web-components").then(
-      ({ registerFilePreviewElement }) => {
-        if (disposed) {
-          return;
-        }
-
-        registerFilePreviewElement();
-
-        const handleLoadStart = () => {
-          console.log("preview loading");
-        };
-
-        preview.addEventListener("file-preview:loadstart", handleLoadStart);
-
-        removeListeners = () => {
-          preview.removeEventListener("file-preview:loadstart", handleLoadStart);
-        };
-      }
-    );
-
-    return () => {
-      disposed = true;
-      removeListeners?.();
-    };
-  });
+  if (!browser) {
+    console.log("preview waits for the browser");
+  }
 </script>
 
-<file-preview bind:this={preview} src="/sample.pdf"></file-preview>
+{#if browser}
+  <file-preview
+    use:filePreview={{
+      src: "/sample.pdf",
+      onLoadStart() {
+        console.log("preview loading");
+      }
+    }}
+  ></file-preview>
+{/if}
 ```
 
 ## Notes
 
-- Use `bind:this` to get the element instance, then assign `requestConfig` and `previewService` as DOM properties.
+- Use `bind:this` in the direct Web Component path to assign `requestConfig` and `previewService` as DOM properties.
+- The action assigns `requestConfig` and `previewService` as DOM properties under the hood.
 - Do not try to pass `requestConfig` or `previewService` as serialized attributes.
-- String values such as `src`, `file-name`, and `mime-type` can be written directly on the element.
-- Custom events are native DOM events, so `addEventListener` is the most reliable integration surface here.
+- The action maps `src`, `fileName`, and `mimeType` to the underlying custom element attributes.
+- Custom events are still native DOM events underneath, and the Svelte action maps `file-preview:loadstart`, `file-preview:load`, and `file-preview:error` to `onLoadStart`, `onLoad`, and `onError` callbacks.
 - Remote preview still depends on browser-readable URLs, compatible CORS, and auth that works in the browser.
